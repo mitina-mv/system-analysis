@@ -4,7 +4,8 @@ const app = Vue.createApp({
             countVertex: 0,
             arrData: [],
             adjacencyMatrix: [],
-            incidenceMatrix: {}
+            incidenceMatrix: {},
+            flag: false
         }
     },
 
@@ -20,12 +21,14 @@ const app = Vue.createApp({
                     this.arrData.push('');
                 }
             }
+            this.flag = false;
         },
         getResult: function()
         {
             let tmpData;
             this.adjacencyMatrix = [];
             this.incidenceMatrix = {};
+            this.flag = true;
 
             // заполняю матрицу начальными нулями
             for(let i = 0; i < this.countVertex; ++i)
@@ -41,6 +44,8 @@ const app = Vue.createApp({
             for(let i = 0; i < this.arrData.length; ++i)
             {
                 tmpData = this.arrData[i].split(', ');
+
+                if(this.arrData[i] == 0) continue;
 
                 tmpData.forEach(j => {
                     this.adjacencyMatrix[j - 1][i] = 1;

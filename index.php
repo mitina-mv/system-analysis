@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
     <title>LR1</title>
 </head>
 <body>
@@ -34,13 +35,14 @@
 
         <div class="result-panel">
             <div class="result-adjacency-matrix">
-                <table>
+                <table v-if='flag'>
                     <thead>
                         <tr>
                             <th></th>
                             <th v-for="(item, index) in arrData">{{index + 1}}</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <tr v-for="(row, index) in adjacencyMatrix">
                             <th>{{index + 1}}</th>
@@ -51,7 +53,17 @@
             </div>
 
             <div class="result-incidence-matrix">
-                
+                <div class="table" v-if='flag'>
+                    <div class="table-col">
+                        <div> </div>
+                        <div v-for="(item, index) in arrData">{{index + 1}}</div>
+                    </div>
+
+                    <div class="table-col" v-for="(row, name) in incidenceMatrix">
+                        <div>{{name}}</div>
+                        <div v-for="(item, index) in row">{{item}}</div>
+                    </div>
+                </div>
             </div>
         </div>
 

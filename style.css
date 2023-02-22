@@ -1,0 +1,14 @@
+.table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 50px);
+}
+
+.table-col {
+    display: grid;
+}
+
+.table-col > div {
+    border: 1px solid;
+    padding: 5px;
+    min-height: 20px;
+}
