@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="style.css">
     <title>LR1</title>
 </head>
 <body>
@@ -43,8 +43,9 @@
             >{{ tab }}</span>
             </div>
 
-            <div class="result-adjacency-matrix tab-content" :class='selectedTab == 0 ? "active-tab" : ""'>
-                <h4>3.1 Матрица смежности А</h4>
+            <div class="tab-content" :class='selectedTab == 0 ? "active-tab" : ""'>
+                <h4>3.1 Исходная матрица смежности</h4>
+
                 <table>
                     <thead>
                         <tr>
@@ -54,7 +55,7 @@
                     </thead>
 
                     <tbody>
-                        <tr v-for="(row, index) in adjacencyMatrix">
+                        <tr v-for="(row, index) in lastMatrix">
                             <th>{{index + 1}}</th>
                             <td v-for="(item, ind) in row">{{item}}</td>
                         </tr>
@@ -62,19 +63,47 @@
                 </table>
             </div>
 
-            <div class="result-incidence-matrix tab-content" :class='selectedTab == 1 ? "active-tab" : ""'>
-                <h4>3.2 Матрица инциденций В</h4>
-                <div class="table">
-                    <div class="table-col">
-                        <div> </div>
-                        <div class='th' v-for="(item, index) in arrData">{{index + 1}}</div>
-                    </div>
+            <div class="tab-content" :class='selectedTab == 1 ? "active-tab" : ""'>
+                <h4>3.2 Новая матрица смежности</h4>
 
-                    <div class="table-col" v-for="(row, name) in incidenceMatrix">
-                        <div class='th'>{{name}}</div>
-                        <div v-for="(item, index) in row">{{item}}</div>
-                    </div>
-                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th v-for="(arr, index) in namesVertex">
+                                {{ arr.nv + 1 }} ({{ arr.lv + 1 }})
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr v-for="(arr, index) in namesVertex">
+                            <th>
+                                {{ arr.nv + 1 }} ({{ arr.lv + 1 }})
+                            </th>
+                            <td v-for="(item, ind) in newMatrix[arr.nv]">
+                                {{item}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-content" :class='selectedTab == 2 ? "active-tab" : ""'>
+                <h4>3.3 Иерархические уровни</h4>
+                <table>
+                    <tbody>
+                        <tr v-for="(row, index) in levels">
+                            <th>
+                                {{index}}-й уровень:
+                            </th>
+                            <td>
+                                {{ getString(row) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
         </div>
         <p class="result-panel__no-data teh-info" v-else>
@@ -84,6 +113,6 @@
     
     <script src="/plagins/vue3.0/vue.js"></script>
     <script src="/plagins/axios/axios.js"></script>
-    <script src="/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

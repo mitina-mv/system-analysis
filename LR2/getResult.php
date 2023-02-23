@@ -1,15 +1,15 @@
 <?php
-$arr = [
-    0 => [2],
-    1 => [0, 4],
-    2 => [],
-    3 => [6], 
-    // 4 => [2, 7, 6], 
-    4 => [2], 
-    5 => [1, 3],
-    6 => [2],
-    // 7 => []
-];
+$json_str = file_get_contents('php://input'); 
+$arr = json_decode($json_str, true);
+
+// приведение входных данных к нужному виду
+foreach($arr as &$mass)
+{
+    foreach($mass as &$v)
+    {
+        --$v;
+    }
+}
 
 $usedVertex = [];
 $noUsedVertex = array_keys($arr);
@@ -84,9 +84,10 @@ foreach($levels as $lvl)
 {
     foreach($lvl as $k => $v)
     {
-        $tmpVertex[$k] = $v;
+        $tmpVertex[$k] = (int)$v;
     }
 }
+
 $newMatrixA = array_fill(
     0, 
     count($arr), 
@@ -105,71 +106,18 @@ foreach($tmpVertex as $lv => $nv)
     }
 }
 
-// foreach($levels as $lvl)
-// {
-//     foreach($lvl as $nv => $lv)
-//     {
-        
-        
-//         foreach($v['last'] as $inv)
-//         {
-            
-//         }
-//         $v['last']
-//     }
-// }
-
-
-?>
-<style>
-    table {
-    border-collapse: collapse;
+// TODO json переворачивается и все перестает работать
+$t = [];
+foreach($tmpVertex as $lv => $nv){
+    $t[] = [
+        'lv' => (int)$lv,
+        'nv' => (int)$nv
+    ];
 }
 
-td, th {
-    border: 1px solid;
-    padding: 5px;
-    min-height: 20px;
-    min-width: 50px;
-}
-</style>
-
-старая матрица
-<table>
-    <thead>
-        <th></th>
-        <?foreach($arr as $k => $v):?>
-            <th><?=$k+1?></th>
-        <?endforeach?>
-    </thead>
-    <tbody>
-        <?foreach($lastMatrixA as $k => $row):?>
-            <tr>
-            <th><?=$k+1?></th>
-            <?foreach($row as $val):?>
-                <td><?=$val?></td>
-            <?endforeach?>
-            </tr>
-        <?endforeach?>
-    </tbody>
-</table>
-
-новая матрица
-<table>
-    <thead>
-        <th></th>
-        <?foreach($arr as $k => $v):?>
-            <th><?=$k+1?></th>
-        <?endforeach?>
-    </thead>
-    <tbody>
-        <?foreach($newMatrixA as $k => $row):?>
-            <tr>
-            <th><?=$k+1?></th>
-            <?foreach($row as $val):?>
-                <td><?=$val?></td>
-            <?endforeach?>
-            </tr>
-        <?endforeach?>
-    </tbody>
-</table>
+echo json_encode([
+    'lastMatrix' => $lastMatrixA,
+    'newMatrix' => $newMatrixA,
+    'levels' => $levels,
+    'namesVertex' => $t,
+]);

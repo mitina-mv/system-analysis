@@ -3,10 +3,12 @@ const app = Vue.createApp({
         return {
             countVertex: 0,
             selectedTab: 0,
-            tabs: ['Матрица смежности А', 'Матрица инциденций В'],
+            tabs: ['Исходная матрица смежности', 'Новая матрица смежности', 'Иерархические уровни'],
             arrData: [],
-            adjacencyMatrix: [],
-            incidenceMatrix: {},
+            lastMatrix: [],
+            newMatrix: [],
+            namesVertex: {},
+            levels: [],
             flag: false
         }
     },
@@ -27,51 +29,33 @@ const app = Vue.createApp({
         },
         getResult: function()
         {
-            let tmpData;
-            let flagIncorrectData = false;
-            this.adjacencyMatrix = [];
-            this.incidenceMatrix = {};
+            let tmpData = {};
+            let flagIncorrectData = true;
 
-            // заполняю матрицу начальными нулями
-            for(let i = 0; i < this.countVertex; ++i)
-            {
-                this.adjacencyMatrix[i] = [];
-                for(let j = 0; j < this.countVertex; ++j)
-                {
-                    this.adjacencyMatrix[i][j] = 0;
-                }
-            }
+            this.lastMatrix = [];
+            this.newMatrix = [];
+            this.levels = [];
 
+            // получение входных данных
             for(let i = 0; i < this.arrData.length; ++i)
-            {
-                tmpData = this.arrData[i].split(', ');
+            {                
+                tmpData[i] = this.arrData[i].split(', ');
 
-                if(this.arrData[i] == '') continue;
+                if(this.arrData[i] == '')
+                {
+                    tmpData[i] = [];
+                    continue;
+                } 
 
-                tmpData.forEach(j => {
-                    if(isNaN(j) || (j <= 0 || j > this.countVertex)) {
-                        flagIncorrectData = true;
-                        return;
-                    }
-
-                    this.adjacencyMatrix[j - 1][i] = 1;
-
-                    this.incidenceMatrix[`${j}-${i + 1}`] = {};
-
-                    for(let k = 1; k <= this.countVertex; ++k)
+                flagIncorrectData = tmpData[i].every(j => {
+                    if(isNaN(j) || (Number(j) <= 0 || Number(j) > this.countVertex))
                     {
-                        this.incidenceMatrix[`${j}-${i + 1}`][k] = 0;
-                    }
-
-                    if(j == (i + 1)){
-                        this.incidenceMatrix[`${j}-${i + 1}`][j] = 2;
-                    } else {
-                        this.incidenceMatrix[`${j}-${i + 1}`][i + 1] = -1;
-                        this.incidenceMatrix[`${j}-${i + 1}`][j] = 1;
-                    }
+                        return false;
+                    } 
+                    else return true;
                 });
 
-                if(flagIncorrectData) {
+                if(!flagIncorrectData) {
                     this.flag = false;
                     break;
                 }
@@ -79,50 +63,23 @@ const app = Vue.createApp({
                 this.flag = true;
             }
 
-            // сортировка для ребер
-            if(this.flag) {
-                this.incidenceMatrix = Object.keys(this.incidenceMatrix).sort().reduce(
-                    (obj, key) => {
-                      obj[key] = this.incidenceMatrix[key];
-                      return obj;
-                    },
-                    {}
-                );
+            if(this.flag)
+            {                
+                axios
+                    .post('/LR2/getResult.php', tmpData)
+                    .then(response => {
+                        this.lastMatrix = response.data.lastMatrix;
+                        this.newMatrix = response.data.newMatrix;
+                        this.levels = response.data.levels;
+                        this.namesVertex = response.data.namesVertex;
+                    })
+                    .catch(error => console.log(error));
             }
         },
-        getAdjacencyMatrix: function() 
-        {
-
-        },
-        getIncidenceMatrix: function()
-        {
-
+        getString: function(obj) {
+            return Object.keys(obj).map(v => Number(v) + 1).join(', ');
         }
     }
 })
-
-app.component('tabs', {
-    props: {
-        selectedTab: {
-            type: Number,
-            required: true
-        }
-    },
-    template: `
-      <div>    
-        <ul>
-          <span class="tab" 
-                v-for="(tab, index) in tabs" 
-                @click="selectedTab = tab"
-          >{{ tab }}</span>
-        </ul> 
-      </div>
-    `,
-    data() {
-      return {
-        tabs: ['Матрица смежности А', 'Матрица инциденций В']
-      }
-    }
-  })
 
 app.mount("#app")
