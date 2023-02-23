@@ -2,6 +2,8 @@ const app = Vue.createApp({
     data(){
         return {
             countVertex: 0,
+            selectedTab: 0,
+            tabs: ['Матрица смежности А', 'Матрица инциденций В'],
             arrData: [],
             adjacencyMatrix: [],
             incidenceMatrix: {},
@@ -26,9 +28,9 @@ const app = Vue.createApp({
         getResult: function()
         {
             let tmpData;
+            let flagIncorrectData = false;
             this.adjacencyMatrix = [];
             this.incidenceMatrix = {};
-            this.flag = true;
 
             // заполняю матрицу начальными нулями
             for(let i = 0; i < this.countVertex; ++i)
@@ -37,7 +39,6 @@ const app = Vue.createApp({
                 for(let j = 0; j < this.countVertex; ++j)
                 {
                     this.adjacencyMatrix[i][j] = 0;
-                    // this.incidenceMatrix[j +'-' + i][j] = 0;
                 }
             }
 
@@ -45,23 +46,49 @@ const app = Vue.createApp({
             {
                 tmpData = this.arrData[i].split(', ');
 
-                if(this.arrData[i] == 0) continue;
+                if(this.arrData[i] == '') continue;
 
                 tmpData.forEach(j => {
+                    if(isNaN(j) || (j <= 0 || j > this.countVertex)) {
+                        flagIncorrectData = true;
+                        return;
+                    }
+
                     this.adjacencyMatrix[j - 1][i] = 1;
 
                     this.incidenceMatrix[`${j}-${i + 1}`] = {};
 
-                    for(let k = 1; k <= this.countVertex; ++k){
+                    for(let k = 1; k <= this.countVertex; ++k)
+                    {
                         this.incidenceMatrix[`${j}-${i + 1}`][k] = 0;
                     }
 
-                    this.incidenceMatrix[`${j}-${i + 1}`][i + 1] = -1;
-                    this.incidenceMatrix[`${j}-${i + 1}`][j] = 1;
+                    if(j == (i + 1)){
+                        this.incidenceMatrix[`${j}-${i + 1}`][j] = 2;
+                    } else {
+                        this.incidenceMatrix[`${j}-${i + 1}`][i + 1] = -1;
+                        this.incidenceMatrix[`${j}-${i + 1}`][j] = 1;
+                    }
                 });
+
+                if(flagIncorrectData) {
+                    this.flag = false;
+                    break;
+                }
+
+                this.flag = true;
             }
 
-            console.log(this.incidenceMatrix);
+            // сортировка для ребер
+            if(this.flag) {
+                this.incidenceMatrix = Object.keys(this.incidenceMatrix).sort().reduce(
+                    (obj, key) => {
+                      obj[key] = this.incidenceMatrix[key];
+                      return obj;
+                    },
+                    {}
+                );
+            }
         },
         getAdjacencyMatrix: function() 
         {
@@ -73,5 +100,29 @@ const app = Vue.createApp({
         }
     }
 })
+
+app.component('tabs', {
+    props: {
+        selectedTab: {
+            type: Number,
+            required: true
+        }
+    },
+    template: `
+      <div>    
+        <ul>
+          <span class="tab" 
+                v-for="(tab, index) in tabs" 
+                @click="selectedTab = tab"
+          >{{ tab }}</span>
+        </ul> 
+      </div>
+    `,
+    data() {
+      return {
+        tabs: ['Матрица смежности А', 'Матрица инциденций В']
+      }
+    }
+  })
 
 app.mount("#app")
