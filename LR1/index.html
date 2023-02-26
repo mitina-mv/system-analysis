@@ -30,6 +30,12 @@
             </div>
 
             <button @click='getResult()' @keyup.enter="getResult()">Результат</button>
+
+            
+            <div>
+                <h4>3.4 Представление графа</h4>
+                <canvas id="canvas"></canvas>
+            </div>
         </div>
 
         <div class="result-panel" v-if='flag'>
@@ -76,6 +82,7 @@
                     </div>
                 </div>
             </div>
+            
         </div>
         <p class="result-panel__no-data teh-info" v-else>
             Для получения результата введите корректные данные и нажмите кнопку "Результат".
