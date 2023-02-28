@@ -25,46 +25,31 @@ const app = Vue.createApp({
 
             this.flag = false;
         },
-        /* getResult: function()
+        getResult: function()
         {
-            let tmpData = {};
-            let flagIncorrectData = true;
+            this.flag = true;
 
-            this.lastMatrix = [];
-            this.newMatrix = [];
-            this.levels = [];
-
-            // получение входных данных
-            for(let i = 0; i < this.arrData.length; ++i)
-            {                
-                tmpData[i] = this.arrData[i].split(', ');
-
-                if(this.arrData[i] == '')
+            for(let i = 0; i < this.countVertex; ++i)
+            {
+                for(let j = 0; j < this.countVertex; ++j)
                 {
-                    tmpData[i] = [];
-                    continue;
-                } 
-
-                flagIncorrectData = tmpData[i].every(j => {
-                    if(isNaN(j) || (Number(j) <= 0 || Number(j) > this.countVertex))
-                    {
-                        return false;
-                    } 
-                    else return true;
-                });
-
-                if(!flagIncorrectData) {
-                    this.flag = false;
-                    break;
+                    if(this.arrData[i][j] < 0){
+                        this.flag = false;
+                        break;
+                    }
                 }
 
-                this.flag = true;
+                if(!this.flag) break;
             }
 
             if(this.flag)
             {                
                 axios
-                    .post('/LR2/getResult.php', tmpData)
+                    .post('/LR4/getResult.php', {
+                        graph: this.arrData,
+                        startVertex: this.startVertex 
+                    }
+                    )
                     .then(response => {
                         this.lastMatrix = response.data.lastMatrix;
                         this.newMatrix = response.data.newMatrix;
@@ -73,7 +58,7 @@ const app = Vue.createApp({
                     })
                     .catch(error => console.log(error));
             }
-        }, */
+        },
         getString: function(obj) {
             return Object.keys(obj).map(v => Number(v) + 1).join(', ');
         }
