@@ -39,28 +39,35 @@ function prim(&$graph, $start)
         asort($q);
     }
 
-    // $curVertex = $start;
-    // $newP = [];
-    // $newP[$start] = NULL;
-    // $q = array_keys($graph);
-    // $i = 0;
-
-    // while($q || $i > 10)
-    // {
-    //     foreach($p as $outV => $innerV)
-    //     {
-    //         if($curVertex == $innerV){
-    //             $newP[$outV] = $innerV;
-    //             $curVertex = $outV;
-    //             unset($q[$outV]);
-    //         }
-    //     }
-    //     $i++;
-    // }
+    $curVertex = $start;
+    $lastP = $p;
+    $newP = [];
+    $newP[$start] = NULL;
+    $q = array_keys($graph);
+    unset($q[$start]);
+    unset($lastP[$start]);
 
     // print_r($p);
+    while(count($q) > 0)
+    {
+        $keys = array_keys($lastP, $curVertex);
 
-    foreach($p as $outV => $innerV)
+        if(count($keys) > 0)
+        {
+            foreach($keys as $outV)
+            {
+                $newP[$outV] = $p[$outV];
+            }
+            unset($q[$curVertex]);
+            $curVertex = $keys[0];
+        } else {
+            unset($q[$curVertex]);
+            $curVertex = current($q);
+        }
+    }
+    print_r($newP);
+
+    foreach($newP as $outV => $innerV)
     {
         if($outV == $start)
             $path[$outV] = NULL;
@@ -70,15 +77,6 @@ function prim(&$graph, $start)
         }
             
     }
-
-    // uasort($p, function ($a, $b) {
-    //     if ($a == $b) {
-    //         return 0;
-    //     }
-    //     return ($a < $b) ? -1 : 1;
-    // });
-
-    // print_r($p);
 
     return $path;
 }
