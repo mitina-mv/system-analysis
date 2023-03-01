@@ -3,7 +3,6 @@ $json_str = file_get_contents('php://input');
 $data = json_decode($json_str, true);
 
 $graph = $data['graph'];
-$start = $data['startVertex'] - 1;
 
 // реализация алгоритма прима
 function prim(&$graph, $start)
@@ -65,7 +64,6 @@ function prim(&$graph, $start)
             $curVertex = current($q);
         }
     }
-    print_r($newP);
 
     foreach($newP as $outV => $innerV)
     {
@@ -78,20 +76,25 @@ function prim(&$graph, $start)
             
     }
 
-    return $path;
+    return [
+        'path' => $path,
+        'tree' => $newP
+    ];
 }
 
 $matrixPath = [];
-// $path = prim($graph, 1);
 // перебор вершин для получения кратчайших путей из всех вершин во все вершины
 foreach(array_keys($graph) as $v)
 {
-    // $path = prim($graph, $v);
     $matrixPath[$v] = prim($graph, $v);
+    $tmp = [];
+    // print_r($matrixPath[$v]['tree']);
+
+    foreach($matrixPath[$v]['tree'] as $key => $item)
+    {
+        $tmp[] = $item === null ? "исход " . ($key + 1) : ($item + 1) . " -> " . ($key + 1);
+    }
+    $matrixPath[$v]['tree'] = $tmp;
 }
 
-
-
-
-// foreach()
-print_r($matrixPath);
+echo json_encode($matrixPath);

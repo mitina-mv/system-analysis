@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>LR1</title>
+    <title>LR4</title>
 </head>
 <body>
     <div id="app">
@@ -14,10 +14,6 @@
             <div class="form-field">
                 <label for="countVertex">Количество вершин</label>
                 <input type="number" name="countVertex" id="" v-model="countVertex" min=0 @change="addDataInput">
-            </div>
-            <div class="form-field">
-                <label for="startVertex">Из какой вершины ищем кратчайшие пути?</label>
-                <input type="number" name="startVertex" id="" v-model="startVertex" min=1 :max="countVertex">
             </div>
         </div>
 
@@ -36,6 +32,52 @@
                 </div>
             </div>
             <button @click="getResult()">Результат</button>
+        </div>
+
+        <div class="result" v-if="flag">
+            <h3>Шаг 3. Результаты вычислений</h3>
+
+            <div class="tabs">
+                <span class="tab" 
+                        v-for="(tab, index) in tabs" 
+                        @click="selectedTab = index"
+                        :class='selectedTab == index ? "active-tab" : ""'
+                >  
+                    {{ tab }}
+                </span>
+            </div>
+
+            <div class="tab-content" :class='selectedTab == 0 ? "active-tab" : ""'>
+                <h4>3.1 Матрица кратчайших путей</h4>
+
+                <table>
+                    <thead>
+                        <th></th>
+                        <th v-for="(item, index) in matrixPath">{{index + 1}}</th>
+                    </thead>
+
+                    <tbody>
+                        <tr v-for="(arr, index) in matrixPath">
+                            <th>{{index + 1}}</th>
+                            <td v-for="(item, ind) in arr">
+                                {{item == null ? "-" : item}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-content tree-result" :class='selectedTab == 1 ? "active-tab" : ""'>
+                <h4>3.2 Остовные деревья</h4>
+
+                <div class="tree-item" v-for="(arr, ind) in tree">
+                    <span v-for="(item, i) in arr">{{item}}</span>
+                </div>
+
+                </div>
+
+            </div>
+
         </div>
     </div>
 

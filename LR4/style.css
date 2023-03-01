@@ -16,7 +16,7 @@ div#app {
     padding: 20px;
     border-radius: 10px;
     gap: 20px;
-    height: calc(100vh - 40px);
+    min-height: calc(100vh - 40px);
     box-sizing: border-box;
 }
 .form-field {
@@ -143,4 +143,20 @@ span.tab.active-tab {
 
 .tab-content.active-tab {
     display: block;
+}
+.tree-item {
+    display: grid;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid;
+}
+
+.tree-result.tab-content.active-tab {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.tree-result h4 {
+    grid-column: 1/-1;
 }

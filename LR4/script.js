@@ -4,9 +4,11 @@ const app = Vue.createApp({
             countVertex: 0,
             startVertex: 1,
             selectedTab: 0,
-            tabs: ['Исходная матрица смежности', 'Новая матрица смежности', 'Иерархические уровни'],
+            tabs: ['Матрица кратчайших путей', 'Остовные деревья'],
             arrData: [],
-            flag: false
+            flag: false,
+            tree: [],
+            matrixPath: []
         }
     },
 
@@ -28,6 +30,8 @@ const app = Vue.createApp({
         getResult: function()
         {
             this.flag = true;
+            this.tree = [];
+            this.matrixPath = [];
 
             for(let i = 0; i < this.countVertex; ++i)
             {
@@ -46,15 +50,14 @@ const app = Vue.createApp({
             {                
                 axios
                     .post('/LR4/getResult.php', {
-                        graph: this.arrData,
-                        startVertex: this.startVertex 
+                        graph: this.arrData
                     }
                     )
                     .then(response => {
-                        this.lastMatrix = response.data.lastMatrix;
-                        this.newMatrix = response.data.newMatrix;
-                        this.levels = response.data.levels;
-                        this.namesVertex = response.data.namesVertex;
+                        response.data.forEach(element => {
+                            this.tree.push(element.tree);
+                            this.matrixPath.push(element.path);
+                        });
                     })
                     .catch(error => console.log(error));
             }
