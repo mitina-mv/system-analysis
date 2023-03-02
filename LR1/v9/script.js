@@ -6,7 +6,8 @@ const app = Vue.createApp({
             incidenceMatrix: [],
             incidenceLeft: [],
             innerDataCorrect: [],
-            flag: false
+            flag: false, 
+            errorText: null
         }
     },
 
@@ -30,6 +31,7 @@ const app = Vue.createApp({
         {
             let tmpData;
             let flagIncorrectData = false;
+            this.errorText = null;
             this.incidenceMatrix = [];
             this.incidenceLeft = [];
             this.innerDataCorrect = [];
@@ -42,6 +44,7 @@ const app = Vue.createApp({
 
                 tmpData.forEach(j => {
                     if(isNaN(j) || (j <= 0 || j > this.countVertex)) {
+                        this.errorText = `В поле G(${i+1}) введено некорректное значение!`;
                         flagIncorrectData = true;
                         return;
                     }
@@ -103,6 +106,7 @@ const app = Vue.createApp({
             this.countVertex = 0;
             this.flag = false;
             this.arrData = [];
+            this.errorText = null;
         }
     }
 })

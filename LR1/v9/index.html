@@ -65,8 +65,8 @@
                     </div>
                 </div>
             </div>
-            <p class="result-panel__no-data teh-info" v-if='!flag'>
-                Для получения результата введите корректные данные и нажмите кнопку "Результат".
+            <p class="result-panel__no-data teh-info" v-if='!flag' :class="errorText == null ? '' : 'error'">
+                {{errorText == null ? 'Для получения результата введите корректные данные и нажмите кнопку "Результат".' : errorText}}                
             </p>
         </div>
     </div>
