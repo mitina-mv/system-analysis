@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>LR1</title>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <div class="control-panel">
+                <h3>Шаг 1. Определите количество вершин</h3>
+                <div class="form-field">
+                    <label for="countVertex">Количество вершин</label>
+                    <input type="number" name="countVertex" id="" v-model="countVertex" min=0 @change="addDataInput">
+                </div>
+            </div>
+    
+            <div class="data-panel">
+                <h3>Шаг 2. Введите множество правых инцеденций G<sup>+1</sup>(i)</h3>
+                <p class="info">Множество G<sup>+1</sup>(i) правых инциденций определяет все вершины, в которые можно попасть из вершины i. Введите вершины через ", " (запятая и пробел).</p>
+    
+                <div class="input-items">
+                    <div class="form-field" v-for="(item, index) in arrData">
+                        <label :for="'data-' + index">G({{ index + 1 }})</label>
+                        <input type="text" :name="'data-' + index" id="" v-model="arrData[index]" placeholder="1, 3">
+                    </div>
+                </div>
+    
+                <div class="buttons">
+                    <button class="primary-btn" @click='getResult()' @keyup.enter="getResult()">Результат</button>
+                    <button class="second-btn" @click='remove()'>Очистить</button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="result-panel">
+                <h3>Шаг 3. Результаты вычислений</h3>
+    
+                <div class="result-adjacency-matrix" v-if='flag'>
+                    <h4>3.1 Матрица инциденций В</h4>
+                    <div class="table">
+                        <div class="table-col">
+                            <div> </div>
+                            <div class='th' v-for="(item, index) in arrData">{{index + 1}}</div>
+                        </div>
+    
+                        <div class="table-col" v-for="(row, name) in incidenceMatrix">
+                            <div class='th'>{{name}}</div>
+                            <div v-for="(item, index) in row">{{item}}</div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="result-incidence-matrix" v-if='flag'>
+                    <h4>3.2 Множество правых инцеденций G<sup>-1</sup>(i)</h4>
+
+                    <div class="result-body">
+                        <span class="item" v-for="(arr, index) in incidenceLeft">
+                            G({{ index + 1 }}) = {{ getString(arr) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <p class="result-panel__no-data teh-info" v-if='!flag'>
+                Для получения результата введите корректные данные и нажмите кнопку "Результат".
+            </p>
+        </div>
+    </div>
+    
+    <script src="/plagins/vue3.0/vue.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
