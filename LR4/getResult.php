@@ -18,6 +18,7 @@ function prim(&$graph, $start)
 
     $q[$start] = 0;
     $p[$start] = NULL;
+    $lastQueue = [];
 
     asort($q);
 
@@ -34,19 +35,34 @@ function prim(&$graph, $start)
             }
         }
 
+        $lastQueue = $q;
+
         unset($q[$u]);
+
+        if($lastQueue == $q)
+        {
+            break;
+        }
+
         asort($q);
     }
 
     $curVertex = $start;
     $lastP = $p;
     $newP = [];
-    $newP[$start] = NULL;
     $q = array_keys($graph);
-    unset($q[$start]);
+
+    foreach($q as $v)
+    {
+        if($v == $start || $lastQueue[$v] == INF)
+        {
+            unset($q[$v]);
+        }
+    }
+
+    $newP[$start] = NULL;
     unset($lastP[$start]);
 
-    // print_r($p);
     while(count($q) > 0)
     {
         $keys = array_keys($lastP, $curVertex);
@@ -68,12 +84,22 @@ function prim(&$graph, $start)
     foreach($newP as $outV => $innerV)
     {
         if($outV == $start)
+        {
             $path[$outV] = NULL;
+        }
         else
         {
             $path[$outV] = $path[$innerV] + $graph[$innerV][$outV];
         }
             
+    }
+
+    foreach($lastQueue as $key => $v)
+    {
+        if($key !== $start && $v == INF)
+        {
+            $path[$key] = "∞";
+        }
     }
 
     return [
@@ -88,7 +114,6 @@ foreach(array_keys($graph) as $v)
 {
     $matrixPath[$v] = prim($graph, $v);
     $tmp = [];
-    // print_r($matrixPath[$v]['tree']);
 
     foreach($matrixPath[$v]['tree'] as $key => $item)
     {
