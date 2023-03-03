@@ -7,18 +7,18 @@ $graph = $data['graph'];
 // реализация алгоритма прима
 function prim(&$graph, $start)
 {
-    $q = []; // queue
-    $p = []; // parent
+    $q = []; // неиспользованные вершины => вес ребра
+    $p = []; // дерево прива [вход] => исход
     $path = array_fill(0, count($graph), 0); // paths
 
     foreach (array_keys($graph) as $k) {
-        $q[$k] = INF;
-        $path[$k] = 0;
+        $q[$k] = INF; // по умолчанию бесконечны
+        $path[$k] = 0; // пути 0 для вычислений
     }
 
-    $q[$start] = 0;
-    $p[$start] = NULL;
-    $lastQueue = [];
+    $q[$start] = 0; // вес ребра для старта = 0
+    $p[$start] = NULL; // нет родителя
+    $lastQueue = []; // для фиксирование предыдущего состояния очереди - чтобы суметь выйти, если путя нет
 
     asort($q);
 
@@ -27,11 +27,11 @@ function prim(&$graph, $start)
         $keys = array_keys($q);
         $u = $keys[0];
 
+        // перебираем граф и устанавливаем новые значения, если можно и вес ребра меньше
         foreach ($graph[$u] as $v => $weight) {
             if ($weight > 0 && in_array($v, $keys) && $weight < $q[$v]) {
                 $p[$v] = $u;
-                $q[$v] = $weight;
-                
+                $q[$v] = $weight;                
             }
         }
 
@@ -39,6 +39,7 @@ function prim(&$graph, $start)
 
         unset($q[$u]);
 
+        // условие выхода при наличии бесконечности
         if($lastQueue == $q)
         {
             break;
@@ -47,11 +48,13 @@ function prim(&$graph, $start)
         asort($q);
     }
 
+    // построение корректного остовного дерева (с правильным следованием)
     $curVertex = $start;
     $lastP = $p;
     $newP = [];
     $q = array_keys($graph);
 
+    // удаляются вершины, в которые пути бесконечны, чтобы не попасть в цикл без выхода
     foreach($q as $v)
     {
         if($v == $start || $lastQueue[$v] == INF)
@@ -63,6 +66,7 @@ function prim(&$graph, $start)
     $newP[$start] = NULL;
     unset($lastP[$start]);
 
+    // выстраивание корретного дерева
     while(count($q) > 0)
     {
         $keys = array_keys($lastP, $curVertex);
@@ -81,6 +85,7 @@ function prim(&$graph, $start)
         }
     }
 
+    // получение путей с учетом корректного дерева
     foreach($newP as $outV => $innerV)
     {
         if($outV == $start)
@@ -94,6 +99,7 @@ function prim(&$graph, $start)
             
     }
 
+    // в матрицу путей добавляем бесконечные пути к недостижимым вершинам
     foreach($lastQueue as $key => $v)
     {
         if($key !== $start && $v == INF)
@@ -115,6 +121,7 @@ foreach(array_keys($graph) as $v)
     $matrixPath[$v] = prim($graph, $v);
     $tmp = [];
 
+    // текстовое остовное дерево - иначе сбивается порядок следования на js
     foreach($matrixPath[$v]['tree'] as $key => $item)
     {
         $tmp[] = $item === null ? "исход " . ($key + 1) : ($item + 1) . " -> " . ($key + 1);
