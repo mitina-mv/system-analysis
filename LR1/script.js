@@ -24,6 +24,7 @@ const app = Vue.createApp({
                 }
             }
             this.flag = false;
+
         },
         getResult: function()
         {
@@ -49,7 +50,8 @@ const app = Vue.createApp({
                 if(this.arrData[i] == '') continue;
 
                 tmpData.forEach(j => {
-                    if(isNaN(j) || (j <= 0 || j > this.countVertex)) {
+                    if(isNaN(j) || (Number(j) <= 0 || Number(j) > this.countVertex))
+                    {
                         flagIncorrectData = true;
                         return;
                     }
@@ -90,39 +92,7 @@ const app = Vue.createApp({
                 );
             }
         },
-        getAdjacencyMatrix: function() 
-        {
-
-        },
-        getIncidenceMatrix: function()
-        {
-
-        }
     }
 })
-
-app.component('tabs', {
-    props: {
-        selectedTab: {
-            type: Number,
-            required: true
-        }
-    },
-    template: `
-      <div>    
-        <ul>
-          <span class="tab" 
-                v-for="(tab, index) in tabs" 
-                @click="selectedTab = tab"
-          >{{ tab }}</span>
-        </ul> 
-      </div>
-    `,
-    data() {
-      return {
-        tabs: ['Матрица смежности А', 'Матрица инциденций В']
-      }
-    }
-  })
 
 app.mount("#app")

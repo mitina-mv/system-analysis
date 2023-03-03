@@ -43,7 +43,8 @@ const app = Vue.createApp({
                 if(this.arrData[i] == '') continue;
 
                 tmpData.forEach(j => {
-                    if(isNaN(j) || (j <= 0 || j > this.countVertex)) {
+                    if(isNaN(j) || (Number(j) <= 0 || Number(j) > this.countVertex)) 
+                    {
                         this.errorText = `В поле G(${i+1}) введено некорректное значение!`;
                         flagIncorrectData = true;
                         return;
