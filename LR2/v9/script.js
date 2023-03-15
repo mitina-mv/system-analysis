@@ -51,6 +51,7 @@ const app = Vue.createApp({
                 flagIncorrectData = tmpData[i].every(j => {
                     if(isNaN(j) || (Number(j) <= 0 || Number(j) > this.countVertex))
                     {
+                        this.errorText = `В поле G(${i+1}) введено некорректное значение!`;
                         return false;
                     } 
                     else return true;
@@ -74,7 +75,10 @@ const app = Vue.createApp({
                         this.levels = response.data.levels;
                         this.namesVertex = response.data.namesVertex;
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => {
+                        this.errorText = `Не удалось обработать запрос`;
+                        console.log(error)
+                    });
             }
         },
         getString: function(obj) 

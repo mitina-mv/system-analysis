@@ -1,3 +1,6 @@
+div#app > div {
+    overflow-y: auto;
+}
 body {
     margin: 0;
     padding: 0;
