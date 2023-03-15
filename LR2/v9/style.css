@@ -1,6 +1,6 @@
 .table {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 50px);
+    grid-template-columns: repeat(auto-fit, 75px);
 }
 
 .table-col {
