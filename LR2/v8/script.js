@@ -3,8 +3,9 @@ const app = Vue.createApp({
         return {
             countVertex: 0,
             arrData: [],
-            adjacencyMatrix: [],
-            incidenceLeft: [],
+            newIncidenceLeft: [],
+            levels: [],
+            namesVertex: {},
             flag: false
         }
     },
@@ -25,60 +26,54 @@ const app = Vue.createApp({
         },
         getResult: function()
         {
-            let tmpData;
+            if(this.countVertex <= 0) return;
+            
+            let tmpData = {};
             let flagIncorrectData = false;
-            this.adjacencyMatrix = [];
-            this.incidenceLeft = [];
+            this.flag = true;
 
-            // заполняю матрицу начальными нулями
-            for(let i = 0; i < this.countVertex; ++i)
-            {
-                this.adjacencyMatrix[i] = [];
-                for(let j = 0; j < this.countVertex; ++j)
-                {
-                    this.adjacencyMatrix[i][j] = 0;
-                }
-            }
+            this.newIncidenceLeft = [];
+            this.levels = [];
+            this.namesVertex = {};
 
             for(let i = 0; i < this.arrData.length; ++i)
             {
-                tmpData = this.arrData[i].split(', ');
+                tmpData[i] = this.arrData[i].split(', ');
 
-                if(this.arrData[i] == '') continue;
+                if(this.arrData[i] == '')
+                {
+                    tmpData[i] = [];
+                    continue;
+                }
 
-                tmpData.forEach(j => {
-                    if(isNaN(j) || (j <= 0 || j > this.countVertex)) {
-                        flagIncorrectData = true;
-                        return;
-                    }
-
-                    this.adjacencyMatrix[i][j - 1] = 1;
+                flagIncorrectData = tmpData[i].every(j => {
+                    if(isNaN(j) || (Number(j) <= 0 || Number(j) > this.countVertex))
+                    {
+                        return false;
+                    } 
+                    else return true;
                 });
 
-                if(flagIncorrectData) {
+                if(!flagIncorrectData) {
                     this.flag = false;
                     break;
                 }
-
-                this.flag = true;
             }
 
-            // по матрице смежности собираем множество левых инциденций
-            for(let i = 0; i < this.countVertex; ++i)
-            {
-                this.incidenceLeft.push([]);
-                for(let j = 0; j < this.countVertex; ++j)
-                {
-                    if(this.adjacencyMatrix[j][i] == 1){
-                        this.incidenceLeft[i].push(j);
-                    }
-                }
+            if(this.flag)
+            {                
+                axios
+                    .post('./getResult.php', tmpData)
+                    .then(response => {
+                        this.newIncidenceLeft = response.data.newSet;
+                        this.levels = response.data.levels;
+                        this.namesVertex = response.data.namesVertex;
+                    })
+                    .catch(error => console.log(error));
             }
-            console.log(this.incidenceLeft);
         },
-        getString: function(arr) 
-        {
-            return arr.map(v => Number(v) + 1).join(', ');
+        getString: function(obj) {
+            return Object.keys(obj).map(v => Number(v) + 1).join(', ');
         },
         remove(){
             this.countVertex = 0;

@@ -81,17 +81,41 @@ foreach($levels as $lvl)
     }
 }
 
-// TODO json переворачивается и все перестает работать
-$t = [];
-foreach($tmpVertex as $lv => $nv){
-    $t[] = [
-        'lv' => (int)$lv,
-        'nv' => (int)$nv
-    ];
+// TODO придумать решение получше
+$tmpArrRigthInc = array_fill(
+    0,
+    count($arr),
+    []
+);
+
+foreach($edges as $edge)
+{
+    $tmpArrRigthInc[$edge['v2']][] = $edge['v1'];
 }
 
+foreach($tmpArrRigthInc as $key => $arrVertex)
+{
+    $lv = $key + 1;
+    $nv = $tmpVertex[$key] + 1;
+
+    $item = "";
+
+    foreach($arrVertex as $k => $v)
+    {
+        $lv1 = $v + 1;
+        $nv1 = $tmpVertex[$v] + 1;
+
+        $item .= "{$nv1} <{$lv1}>";
+
+        if($k != (count($arrVertex) - 1))  $item .= ', ';
+    }
+
+    $arrRigthInc["G({$nv} <{$lv}>)"] = $item;
+}
+
+ksort($arrRigthInc);
+
 echo json_encode([
-    'newSet' => $newMatrixA,
-    'levels' => $levels,
-    'namesVertex' => $t,
+    'newSet' => $arrRigthInc,
+    'levels' => $levels
 ]);
