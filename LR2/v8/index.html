@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>LR1</title>
+    <title>LR2</title>
 </head>
 <body>
     <div id="app">
@@ -39,31 +39,26 @@
             <div class="result-panel">
                 <h3>Результаты вычислений</h3>
     
-                <div class="result-adjacency-matrix" v-if='flag'>
-                    <h4>1 Матрица смежности А</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th v-for="(item, index) in arrData">{{index + 1}}</th>
-                            </tr>
-                        </thead>
-    
-                        <tbody>
-                            <tr v-for="(row, index) in adjacencyMatrix">
-                                <th>{{index + 1}}</th>
-                                <td v-for="(item, ind) in row">{{item}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <h4  v-if='flag'>1. Иерархические уровни</h4>
+                <table>
+                    <tbody>
+                        <tr v-for="(row, index) in levels">
+                            <th>
+                                {{index}}-й уровень:
+                            </th>
+                            <td>
+                                {{ getString(row) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
     
                 <div class="result-incidence-matrix" v-if='flag'>
                     <h4>2 Множество левых инциденций G<sup>-1</sup>(i)</h4>
 
                     <div class="result-body">
-                        <span class="item" v-for="(arr, index) in incidenceLeft">
-                            G({{ index + 1 }}) = {{ getString(arr) }}
+                        <span class="item" v-for="(str, index) in newIncidenceLeft">
+                            {{ index }} = {{ str }}
                         </span>
                     </div>
                 </div>
@@ -75,6 +70,7 @@
     </div>
     
     <script src="/plagins/vue3.0/vue.js"></script>
+    <script src="/plagins/axios/axios.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
