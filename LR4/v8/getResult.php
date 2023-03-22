@@ -1,122 +1,98 @@
 <?php
-$json_str = file_get_contents('php://input'); 
+/* $json_str = file_get_contents('php://input'); 
 $data = json_decode($json_str, true);
 
-$graph = $data['graph'];
+$graph = $data['graph']; */
+$graph = [
+    [0, 0, 0, 10, 0],
+    [0, 0, 0, 0, 0],
+    [10, 10, 0, 0, 10],
+    [0, 0, 10, 0, 10],
+    [0, 10, 0, 0, 10]
+];
 
-// реализация алгоритма прима
-function prim(&$graph, $start)
+const WALL = -1;
+const BLANK = 0;
+const STARTVERTEX = 1;
+// const FINISHVERTEX = -2; (?)
+$workArea = [];
+
+// смещения по алгоритму: вправо, вниз, влево, вверх
+const offsetX = [1, 0, -1, 0];
+const offsetY = [0, 1, 0, -1];
+
+$ax = 0; $ay = 1; // старт
+$bx = 2; $by = 4; // конец
+
+// подготовка рабочей области для построения трасс по алгоритму Ли
+// вынести перед функцией
+foreach($graph as $key => $row)
 {
-    $q = []; // неиспользованные вершины => вес ребра
-    $p = []; // дерево прива [вход] => исход
-    $path = array_fill(0, count($graph), 0); // paths
+    $workArea[$key] = [];
 
-    foreach (array_keys($graph) as $k) {
-        $q[$k] = INF; // по умолчанию бесконечны
-        $path[$k] = 0; // пути 0 для вычислений
-    }
-
-    $q[$start] = 0; // вес ребра для старта = 0
-    $p[$start] = NULL; // нет родителя
-    $lastQueue = []; // для фиксирование предыдущего состояния очереди - чтобы суметь выйти, если путя нет
-
-    asort($q);
-
-    while ($q) {
-        // get the minimum value
-        $keys = array_keys($q);
-        $u = $keys[0];
-
-        // перебираем граф и устанавливаем новые значения, если можно и вес ребра меньше
-        foreach ($graph[$u] as $v => $weight) {
-            if ($weight > 0 && in_array($v, $keys) && $weight < $q[$v]) {
-                $p[$v] = $u;
-                $q[$v] = $weight;                
-            }
-        }
-
-        $lastQueue = $q;
-
-        unset($q[$u]);
-
-        // условие выхода при наличии бесконечности
-        if($lastQueue == $q)
-        {
-            break;
-        }
-
-        asort($q);
-    }
-
-    // построение корректного остовного дерева (с правильным следованием)
-    $curVertex = $start;
-    $lastP = $p;
-    $newP = [];
-    $q = array_keys($graph);
-
-    // удаляются вершины, в которые пути бесконечны, чтобы не попасть в цикл без выхода
-    foreach($q as $v)
+    foreach($row as $keyRow => $cell)
     {
-        if($v == $start || $lastQueue[$v] == INF)
-        {
-            unset($q[$v]);
-        }
+        if($cell != 0)
+            $workArea[$key][] = $keyRow;
     }
-
-    $newP[$start] = NULL;
-    unset($lastP[$start]);
-
-    // выстраивание корретного дерева
-    while(count($q) > 0)
-    {
-        $keys = array_keys($lastP, $curVertex);
-
-        if(count($keys) > 0)
-        {
-            foreach($keys as $outV)
-            {
-                $newP[$outV] = $p[$outV];
-            }
-            unset($q[$curVertex]);
-            $curVertex = $keys[0];
-        } else {
-            unset($q[$curVertex]);
-            $curVertex = current($q);
-        }
-    }
-
-    // получение путей с учетом корректного дерева
-    foreach($newP as $outV => $innerV)
-    {
-        if($outV == $start)
-        {
-            $path[$outV] = NULL;
-        }
-        else
-        {
-            $path[$outV] = $path[$innerV] + $graph[$innerV][$outV];
-        }
-            
-    }
-
-    // в матрицу путей добавляем бесконечные пути к недостижимым вершинам
-    foreach($lastQueue as $key => $v)
-    {
-        if($key !== $start && $v == INF)
-        {
-            $path[$key] = "∞";
-        }
-    }
-
-    return [
-        'path' => $path,
-        'tree' => $newP
-    ];
+}
+echo "<pre>";
+print_r($workArea);
+echo "</pre>";
+// проверка, что может существовать
+if($workArea[$ax][$ay] == WALL || $workArea[$bx][$by] == WALL) {
+    echo 'стартовая или конечная вершина - стена, поиск невозможен';
+    return;
 }
 
-$matrixPath = [];
+$d = 1; // распространение волны
+$workArea[$ax][$ay] = STARTVERTEX; // стартовая вершина помечена как начальная
+$stop = true;
+
+$matrixSize = count($graph);
+
+do {
+    $stop = true;
+
+    foreach($workArea as $x => $row)
+    {
+        foreach($row as $y => $cell)
+        {
+            if($cell == $d){
+                for($i = 0; $i < 4; ++$i)
+                {
+                    $iy = $y + offsetX[$i];
+                    $ix = $x + offsetX[$i];
+
+                    // найдена непройденная вершины
+                    // распространяем волну
+                    if($iy >= 0 && $ix >= 0 
+                        && $iy < $matrixSize && $ix < $matrixSize
+                        && $workArea[$ix][$iy] == BLANK
+                    ) {
+                        $stop = false;
+                        $workArea[$ix][$iy] = $d + 1;
+                    }
+                }
+            }
+        }
+    }
+
+    ++$d;
+} while (!$stop && $workArea[$by][$bx] == BLANK);
+
+if($workArea[$by][$bx] == BLANK){
+    echo 'невозможно найти путь';
+    return;
+}
+
+echo "<pre>";
+print_r($workArea);
+echo "</pre>";
+
+// $matrixPath = [];
 // перебор вершин для получения кратчайших путей из всех вершин во все вершины
-foreach(array_keys($graph) as $v)
+/* foreach(array_keys($graph) as $v)
 {
     $matrixPath[$v] = prim($graph, $v);
     $tmp = [];
@@ -127,6 +103,6 @@ foreach(array_keys($graph) as $v)
         $tmp[] = $item === null ? "исход " . ($key + 1) : ($item + 1) . " -> " . ($key + 1);
     }
     $matrixPath[$v]['tree'] = $tmp;
-}
+} */
 
-echo json_encode($matrixPath);
+// echo json_encode($matrixPath);
