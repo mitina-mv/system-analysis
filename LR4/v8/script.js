@@ -2,9 +2,6 @@ const app = Vue.createApp({
     data(){
         return {
             countVertex: 0,
-            startVertex: 1,
-            selectedTab: 0,
-            tabs: ['Матрица кратчайших путей', 'Остовные деревья'],
             arrData: [],
             flag: false,
             tree: [],
@@ -49,7 +46,7 @@ const app = Vue.createApp({
             if(this.flag)
             {                
                 axios
-                    .post('/LR4/getResult.php', {
+                    .post('./getResult.php', {
                         graph: this.arrData
                     }
                     )

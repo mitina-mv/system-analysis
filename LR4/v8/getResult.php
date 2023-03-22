@@ -5,7 +5,7 @@ $data = json_decode($json_str, true);
 $graph = $data['graph']; */
 $graph = [
     [0, 0, 0, 10, 0],
-    [0, 0, 0, 0, 0],
+    [0, 0, 10, 0, 0],
     [10, 10, 0, 0, 10],
     [0, 0, 10, 0, 10],
     [0, 10, 0, 0, 10]
@@ -28,24 +28,84 @@ $bx = 2; $by = 4; // конец
 // вынести перед функцией
 foreach($graph as $key => $row)
 {
-    $workArea[$key] = [];
+    foreach($row as $keyRow => $cell)
+    {
+        if($cell == 0) {
+            $workArea[$key][$keyRow] = WALL;
+        } else {
+            $workArea[$key][$keyRow] = BLANK;
+        }
+    }
+}
+
+$start = 0;
+$finish = 2;
+
+foreach($graph as $key => $row)
+{
+    $tree[$key] = [];
 
     foreach($row as $keyRow => $cell)
     {
         if($cell != 0)
-            $workArea[$key][] = $keyRow;
+            $tree[$key][] = $keyRow;
     }
 }
 echo "<pre>";
-print_r($workArea);
+print_r($tree);
 echo "</pre>";
-// проверка, что может существовать
-if($workArea[$ax][$ay] == WALL || $workArea[$bx][$by] == WALL) {
-    echo 'стартовая или конечная вершина - стена, поиск невозможен';
-    return;
-}
 
 $d = 1; // распространение волны
+$markedNodes = array_fill(0, count($tree), 0);
+$markedNodes[$start] = $d;
+
+// TODO при отсуствии пути потенциально не остановится
+while($markedNodes[$finish] == 0)
+{
+    foreach($markedNodes as $keyNode => $val)
+    {
+        if($val == $d)
+        {
+            foreach($tree[$keyNode] as $near)
+            {
+                if($markedNodes[$near] == 0)
+                {
+                    $markedNodes[$near] = $d + 1;
+                }
+            }
+        }
+    }
+    ++$d;
+}
+echo "<pre>";
+print_r($markedNodes);
+echo "</pre>";
+// $d = 0; // распространение волны
+// $workArea = array_fill(
+//     0,
+//     count($tree),
+//     array_fill(0, count($tree), -1)
+// );
+
+// foreach($tree as $nodeKey => $near)
+// {
+//     foreach($near as $vertex)
+//     {
+//         $workArea[$nodeKey][(int)$vertex] = 0;
+//     }
+// }
+// echo "<pre>";
+// print_r($workArea);
+// echo "</pre>";
+
+
+// проверка, что может существовать
+// if($workArea[$ax][$ay] == WALL || $workArea[$bx][$by] == WALL) {
+//     echo 'стартовая или конечная вершина - стена, поиск невозможен';
+//     return;
+// }
+
+/* $d = 0; // распространение волны
 $workArea[$ax][$ay] = STARTVERTEX; // стартовая вершина помечена как начальная
 $stop = true;
 
@@ -88,7 +148,7 @@ if($workArea[$by][$bx] == BLANK){
 
 echo "<pre>";
 print_r($workArea);
-echo "</pre>";
+echo "</pre>"; */
 
 // $matrixPath = [];
 // перебор вершин для получения кратчайших путей из всех вершин во все вершины
