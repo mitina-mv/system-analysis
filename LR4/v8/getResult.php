@@ -3,9 +3,12 @@
 $data = json_decode($json_str, true);
 
 $graph = $data['graph']; */
+
+echo "<pre>";
+
 $graph = [
     [0, 0, 0, 10, 0],
-    [0, 0, 10, 0, 0],
+    [0, 0, 0, 0, 0],
     [10, 10, 0, 0, 10],
     [0, 0, 10, 0, 10],
     [0, 10, 0, 0, 10]
@@ -39,7 +42,7 @@ foreach($graph as $key => $row)
 }
 
 $start = 0;
-$finish = 2;
+$finish = 1;
 
 foreach($graph as $key => $row)
 {
@@ -51,17 +54,23 @@ foreach($graph as $key => $row)
             $tree[$key][] = $keyRow;
     }
 }
-echo "<pre>";
+
+if(count($tree[$start]) == 0)
+{
+    echo 'из вершины нет путей';
+    return false;
+}
 print_r($tree);
-echo "</pre>";
 
 $d = 1; // распространение волны
 $markedNodes = array_fill(0, count($tree), 0);
 $markedNodes[$start] = $d;
+$stop = false;
 
-// TODO при отсуствии пути потенциально не остановится
-while($markedNodes[$finish] == 0)
+while($markedNodes[$finish] == 0 && !$stop)
 {
+    $stop = true;
+
     foreach($markedNodes as $keyNode => $val)
     {
         if($val == $d)
@@ -70,6 +79,7 @@ while($markedNodes[$finish] == 0)
             {
                 if($markedNodes[$near] == 0)
                 {
+                    $stop = false;                    
                     $markedNodes[$near] = $d + 1;
                 }
             }
@@ -77,9 +87,63 @@ while($markedNodes[$finish] == 0)
     }
     ++$d;
 }
-echo "<pre>";
 print_r($markedNodes);
+
+if($markedNodes[$finish] == 0) {
+    echo 'вершина недостижима';
+    return false;
+}
+
+$path = [];
+$pathLen = 0;
+$curNode = $finish;
+
+$reverseGraph = [];
+$reverseTree = [];
+// создание обратного графа для получения пути
+foreach($graph as $sv => $row)
+{
+    foreach($row as $ev => $cell)
+    {
+        $reverseGraph[$ev][$sv] = $cell;
+
+        if($cell != 0) {
+            $reverseTree[$ev][] = $sv;
+        }
+    }
+}
+print_r($reverseGraph);
+print_r($reverseTree);
+
+while($curNode != $start)
+{
+    $path[] = $curNode;
+    $minWeightEdge = INF;
+
+    $tmpCurNode = $curNode;
+
+    foreach($reverseTree[$tmpCurNode] as $near)
+    {
+        if($markedNodes[$near] != 0 
+            && $markedNodes[$near] == ($markedNodes[$tmpCurNode] - 1)
+            && $reverseGraph[$tmpCurNode][$near] < $minWeightEdge
+        ) {
+            $curNode = $near;
+            $minWeightEdge = $reverseGraph[$tmpCurNode][$near];
+        }
+    } 
+
+    $pathLen += $minWeightEdge;
+}
+
+$path[] = $curNode;
+
+print_r($path);
+print_r($pathLen);
+
+
 echo "</pre>";
+
 // $d = 0; // распространение волны
 // $workArea = array_fill(
 //     0,
