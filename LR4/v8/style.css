@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background: #eaeaea;
+    background: #fff;
     display: grid;
     gap: 10px;
     font-family: 'Consolas';
@@ -11,7 +11,6 @@ body {
 div#app {
     max-width: 1400px;
     margin: 20px auto;
-    background: #fff;
     width: 90%;
     padding: 20px;
     border-radius: 10px;
@@ -99,16 +98,9 @@ p {
     font-size: 15px;
 }
 
-p.info {
-    background: #e7e7ff;
-    border-color: #95b3ff;
-    color: #001c68;
-}
 button {
     padding: 8px 12px;
     text-transform: uppercase;
-    background: #4e29e9;
-    color: #fff;
     font-weight: 800;
     font-family: 'Consolas';
     font-size: 20px;
@@ -117,46 +109,16 @@ button {
     width: 100%;
     margin: 15px 0 20px;
 }
+.primary-btn{
+    background: #474747;
+    color: #fff;
+}
+.second-btn{
+    border: 1px solid #474747;
+    color: #474747;
+}
 
-.tabs {
+.buttons {
     display: flex;
-    gap: 8px;
-    border-bottom: 1px solid #ccc;
-}
-
-span.tab {
-    padding: 8px;
-    background: #f1f1f1;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-span.tab.active-tab {
-    background: #e7e7ff;
-    border-color: #95b3ff;
-    color: #001c68;
-}
-.tab-content {
-    display: none;
-}
-
-.tab-content.active-tab {
-    display: block;
-}
-.tree-item {
-    display: grid;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid;
-}
-
-.tree-result.tab-content.active-tab {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
-}
-
-.tree-result h4 {
-    grid-column: 1/-1;
 }

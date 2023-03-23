@@ -4,7 +4,7 @@ const app = Vue.createApp({
             countVertex: 0,
             arrData: [],
             flag: false,
-            tree: [],
+            dataGraph: null,
             matrixPath: []
         }
     },
@@ -51,16 +51,20 @@ const app = Vue.createApp({
                     }
                     )
                     .then(response => {
-                        response.data.forEach(element => {
-                            this.tree.push(element.tree);
-                            this.matrixPath.push(element.path);
-                        });
+                        this.dataGraph = response.data.data;
+                        this.matrixPath = response.data.matrix;
                     })
                     .catch(error => console.log(error));
             }
         },
-        getString: function(obj) {
-            return Object.keys(obj).map(v => Number(v) + 1).join(', ');
+        getString: function(arr) 
+        {
+            return arr.map(v => Number(v) + 1).join(' -> ');
+        },
+        remove(){
+            this.countVertex = 0;
+            this.flag = false;
+            this.arrData = [];
         }
     }
 })
