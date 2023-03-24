@@ -3,7 +3,7 @@
 // $data = json_decode($json_str, true);
 
 // $graph = $data['graph'];
-
+echo '<pre>';
 $graph = [
     [0, 10, 10, 0],
     [0, 0, 10, 0],
@@ -13,24 +13,26 @@ $graph = [
 
 function getShortPath($graph, $frNode, $toNode)
 {
-    /* $nodes = [];
-    $matrix = [];
+    $nodes = []; // вершинки
+    $matrix = []; // матрица ребер
+    $dist = []; // массив дистанций
+    $previous = []; // пройденные вершины
 
-    foreach($graph as $edge)
+    foreach($graph as $sv => $row)
     {
-        array_push($nodes, $edge[0], $edge[1]); // добавляю концы ребер в массив вершин
-        // составляем матрицу смежности (правильное название?)
-        $matrix[$edge[0]][] = array("end" => $edge[1], "cost" => $edge[2]);
-        $matrix[$edge[1]][] = array("end" => $edge[0], "cost" => $edge[2]);
-    }
+        $nodes[] = $sv;
 
-    // p($matrix);
-    $nodes = array_values(array_unique($nodes)); // удаляем дубли вершин
+        $dist[$sv] = INF;  // по умолчанию путь равен бесконечности 
+        $previous[$sv] = NULL; // предыдущих вершин нет
 
-    // перебираем вершины, чтобы установить пути и предыдущие вершины до них
-    foreach ($nodes as $node) {
-        $dist[$node] = INF; // по умолчанию путь равен бесконечности 
-        $previous[$node] = NULL; // предыдущих вершин нет
+        foreach($row as $ev => $cell)
+        {
+            if($cell != 0)
+                $matrix[$sv][] = [
+                    "end" => $ev,
+                    "cost" => $cell
+                ];
+        }
     }
 
     // до начальной вершины путь ноль
@@ -38,6 +40,8 @@ function getShortPath($graph, $frNode, $toNode)
 
     // создаю очередь, чтобы удалять из нее вершины по мере прохождения
     $queue = $nodes;
+
+    // print_r($matrix);
 
     while(count($queue) > 0)
     {
@@ -90,18 +94,18 @@ function getShortPath($graph, $frNode, $toNode)
                 }
             }
         }
-    } */
+    }
 
     $result = [
         'path' => [],
-        // 'len' => $dist[$toNode],
-        'len' => 0,
-        'status' => 0,
+        'len' => $dist[$toNode],
+        // 'len' => 0,
+        'status' => 1,
         'start' => $frNode,
         'finish' => $toNode
     ];
 
-    /* // обратным путем идем от конечной вершины к начальной
+    // обратным путем идем от конечной вершины к начальной
     if($dist[$toNode] != INF)
     {
         $curNode = $toNode;
@@ -114,7 +118,7 @@ function getShortPath($graph, $frNode, $toNode)
     
         // добавляем в начало пути вершину-источник
         array_unshift($result['path'], $curNode);
-    } */
+    }
 
     return $result;
 } 
