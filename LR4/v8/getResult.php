@@ -4,122 +4,116 @@ $data = json_decode($json_str, true);
 
 $graph = $data['graph'];
 
-function lee($graph, $start, $finish)
+function getShortPath($graph, $frNode, $toNode)
 {
-    // создание массива соседей
-    foreach($graph as $key => $row)
-    {
-        $tree[$key] = [];
+    $nodes = []; // вершинки
+    $matrix = []; // матрица ребер
+    $dist = []; // массив дистанций
+    $previous = []; // пройденные вершины
 
-        foreach($row as $keyRow => $cell)
+    foreach($graph as $sv => $row)
+    {
+        $nodes[] = $sv;
+
+        $dist[$sv] = INF;  // по умолчанию путь равен бесконечности 
+        $previous[$sv] = NULL; // предыдущих вершин нет
+
+        foreach($row as $ev => $cell)
         {
             if($cell != 0)
-                $tree[$key][] = $keyRow;
+                $matrix[$sv][] = [
+                    "end" => $ev,
+                    "cost" => $cell
+                ];
         }
     }
 
-    if(count($tree[$start]) == 0)
+    // до начальной вершины путь ноль
+    $dist[$frNode] = 0;
+
+    // создаю очередь, чтобы удалять из нее вершины по мере прохождения
+    $queue = $nodes;
+
+    while(count($queue) > 0)
     {
-        return [
-            'path' => 'путей нет, исходная вершина не имеет соседей',
-            'len' => 0,
-            'status' => 0,
-            'start' => $start,
-            'finish' => $finish
-        ];
-    }
-
-    $d = 1; // распространение волны
-    $markedNodes = array_fill(0, count($tree), 0);
-    $markedNodes[$start] = $d;
-    $stop = false;
-
-    // получение всех марштуров - процесс распространения волны
-    while($markedNodes[$finish] == 0 && !$stop)
-    {
-        $stop = true;
-
-        foreach($markedNodes as $keyNode => $val)
+        $min = INF; // минимум тоже бесконечный
+        $curNode = null;
+        
+        // переираем непройденные вершины
+        foreach ($queue as $node)
         {
-            if($val == $d)
+            // если путь к этой вершине меньше минимума, то
+            if ($dist[$node] < $min) 
+            { 
+                $min = $dist[$node]; // минимум обновляем
+                $curNode = $node; // вершину запоминаем
+            }
+        }
+
+        
+        // если расстояние до этой вершины бесконечно или она целевая, то выходим из while
+        // бесконечное расстояние говорит о том, что в вершину нет пути
+        if($dist[$curNode] == INF || $curNode == $toNode || $curNode === null)
+        {
+            break;
+        }
+
+        $queue = array_values(array_diff($queue, [$curNode]));
+
+        // отмечаем текущую вершину пройденной и удаляем из "очереди"
+
+        // ЗДЕСЬ ИДЕТ ПЕРЕСЧЕТ МЕТОК - ПУТЕЙ ДО ВЕРШИН ///
+
+        // если у данной вершины есть смежные вершины
+        if ($matrix[$curNode]) {
+            // перебираем смежные вершины
+            foreach ($matrix[$curNode] as $nodeEdge) 
             {
-                foreach($tree[$keyNode] as $near)
+                $newDist = $dist[$curNode] + $nodeEdge["cost"]; // считаем путь от найденной вершины к этой
+
+                // если новый путь до смежной вершины короче того, что был высчитан ранее
+                if ($newDist < $dist[$nodeEdge["end"]]) 
                 {
-                    if($markedNodes[$near] == 0)
-                    {
-                        $stop = false;                    
-                        $markedNodes[$near] = $d + 1;
-                    }
+                    $dist[$nodeEdge["end"]] = $newDist; // обновляем метку пути к конечной вершине ребра
+                    $previous[$nodeEdge["end"]] = $curNode; // записываем текущую вершину в предшественники
                 }
             }
         }
-
-        ++$d;
     }
 
-    // если мы не дошли до финишной вершины
-    if($markedNodes[$finish] == 0) {
+    $result = [
+        'path' => [],
+        'len' => $dist[$toNode],
+        'status' => 1,
+        'start' => $frNode,
+        'finish' => $toNode
+    ];
+
+    // обратным путем идем от конечной вершины к начальной
+    if($dist[$toNode] != INF)
+    {
+        $curNode = $toNode;
+        // пока есть предществующие вершины
+        while (isset($previous[$curNode])) 
+        {
+            array_unshift($result['path'], $curNode); // добавляем текущий узел в путь (в начало массива)
+            $curNode = $previous[$curNode]; // новым текущим узлом становится предществующий
+        }
+    
+        // добавляем в начало пути вершину-источник
+        array_unshift($result['path'], $curNode);
+    } else {
         return [
-            'path' => 'путей нет, вершина недостижима',
+            'path' => '< отсутствует >',
             'len' => 0,
             'status' => 0,
-            'start' => $start,
-            'finish' => $finish
+            'start' => $frNode,
+            'finish' => $toNode
         ];
     }
 
-    $path = [];
-    $pathLen = 0;
-    $curNode = $finish;
-
-    $reverseGraph = [];
-    $reverseTree = [];
-    // создание обратного графа для получения пути
-    foreach($graph as $sv => $row)
-    {
-        foreach($row as $ev => $cell)
-        {
-            $reverseGraph[$ev][$sv] = $cell;
-
-            if($cell != 0) {
-                $reverseTree[$ev][] = $sv;
-            }
-        }
-    }
-
-    // развертывание пути и получение конечной траектории и ее длины 
-    while($curNode != $start)
-    {
-        $path[] = $curNode;
-        $minWeightEdge = INF;
-
-        $tmpCurNode = $curNode;
-
-        foreach($reverseTree[$tmpCurNode] as $near)
-        {
-            if($markedNodes[$near] != 0 
-                && $markedNodes[$near] == ($markedNodes[$tmpCurNode] - 1)
-                && $reverseGraph[$tmpCurNode][$near] < $minWeightEdge
-            ) {
-                $curNode = $near;
-                $minWeightEdge = $reverseGraph[$tmpCurNode][$near];
-            }
-        } 
-
-        $pathLen += $minWeightEdge;
-    }
-
-    // добавляем стартовую вершину в конец пути
-    $path[] = $curNode;
-
-    return [
-        'path' => $path,
-        'len' => $pathLen,
-        'status' => 1,
-        'start' => $start,
-        'finish' => $finish
-    ];
-}
+    return $result;
+} 
 
 $response = [
     'data' => [],
@@ -133,7 +127,7 @@ for($i = 0; $i < count($graph); ++$i)
     for($j = 0; $j < count($graph); ++$j)
     {
         if($i != $j) {
-            $data = lee($graph, $i, $j);
+            $data = getShortPath($graph, $i, $j);
 
             $itemResponse[$j] = $data['len'] === 0 ? '∞' : $data['len']; 
             $response['data'][] = $data;

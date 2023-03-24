@@ -11,7 +11,8 @@
     <div id="app">
         <div class="control-panel">
             <div style="grid-column: 1/-1;">
-                <h3>Ввод количества вершин</h3>
+                <h3>Определите начальные данные</h3>
+                <h5>Введите количество вершин и матрицу расстояний</h5>
             </div>
 
             <div class="form-field">
@@ -21,8 +22,6 @@
         </div>
 
         <div class="inner-matrix">
-            <h3>Ввод матрицы расстояний D</h3>
-
             <div class="table">
                 <div class="table-col">
                     <div class="th"></div>
@@ -70,15 +69,16 @@
                 <h4>Пути</h4>
 
                 <div class="item" v-for="(data, index) in dataGraph">
-                    Путь {{index + 1}} <b>({{data['start'] + 1}} - {{data['finish'] + 1}})  </b>
+                    Путь {{index + 1}} ({{data['start'] + 1}} - {{data['finish'] + 1}})
                     <span v-if="data['status']">
-                        {{getString(data['path'])}}
+                        {{getString(data['path'].reverse())}}
                     </span>
 
                     <span v-else>
                         {{data['path']}}
                     </span>
                 </div>
+
             </div>
 
         </div>
