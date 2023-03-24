@@ -1,15 +1,8 @@
 <?php
-// $json_str = file_get_contents('php://input'); 
-// $data = json_decode($json_str, true);
+$json_str = file_get_contents('php://input'); 
+$data = json_decode($json_str, true);
 
-// $graph = $data['graph'];
-echo '<pre>';
-$graph = [
-    [0, 10, 10, 0],
-    [0, 0, 0, 0],
-    [10, 0, 0, 10],
-    [0, 10, 0, 0],
-];
+$graph = $data['graph'];
 
 function getShortPath($graph, $frNode, $toNode)
 {
@@ -111,7 +104,7 @@ function getShortPath($graph, $frNode, $toNode)
         array_unshift($result['path'], $curNode);
     } else {
         return [
-            'path' => 'путей нет',
+            'path' => '< отсутствует >',
             'len' => 0,
             'status' => 0,
             'start' => $frNode,
