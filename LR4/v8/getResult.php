@@ -6,7 +6,7 @@
 echo '<pre>';
 $graph = [
     [0, 10, 10, 0],
-    [0, 0, 10, 0],
+    [0, 0, 0, 0],
     [10, 0, 0, 10],
     [0, 10, 0, 0],
 ];
@@ -41,8 +41,6 @@ function getShortPath($graph, $frNode, $toNode)
     // создаю очередь, чтобы удалять из нее вершины по мере прохождения
     $queue = $nodes;
 
-    // print_r($matrix);
-
     while(count($queue) > 0)
     {
         $min = INF; // минимум тоже бесконечный
@@ -59,25 +57,19 @@ function getShortPath($graph, $frNode, $toNode)
             }
         }
 
+        
         // если расстояние до этой вершины бесконечно или она целевая, то выходим из while
         // бесконечное расстояние говорит о том, что в вершину нет пути
-        if($dist[$curNode] == INF || $curNode == $toNode || $curNode == null)
+        if($dist[$curNode] == INF || $curNode == $toNode || $curNode === null)
         {
-            if($dist[$curNode] == INF)
-                return [
-                    'path' => 'путей нет',
-                    'len' => 0,
-                    'status' => 0,
-                    'start' => $frNode,
-                    'finish' => $toNode
-                ];
+            break;
         }
 
         $queue = array_values(array_diff($queue, [$curNode]));
 
         // отмечаем текущую вершину пройденной и удаляем из "очереди"
 
-        // /* ЗДЕСЬ ИДЕТ ПЕРЕСЧЕТ МЕТОК - ПУТЕЙ ДО ВЕРШИН ///
+        // ЗДЕСЬ ИДЕТ ПЕРЕСЧЕТ МЕТОК - ПУТЕЙ ДО ВЕРШИН ///
 
         // если у данной вершины есть смежные вершины
         if ($matrix[$curNode]) {
@@ -99,7 +91,6 @@ function getShortPath($graph, $frNode, $toNode)
     $result = [
         'path' => [],
         'len' => $dist[$toNode],
-        // 'len' => 0,
         'status' => 1,
         'start' => $frNode,
         'finish' => $toNode
@@ -118,6 +109,14 @@ function getShortPath($graph, $frNode, $toNode)
     
         // добавляем в начало пути вершину-источник
         array_unshift($result['path'], $curNode);
+    } else {
+        return [
+            'path' => 'путей нет',
+            'len' => 0,
+            'status' => 0,
+            'start' => $frNode,
+            'finish' => $toNode
+        ];
     }
 
     return $result;
