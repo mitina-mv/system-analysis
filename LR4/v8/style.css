@@ -116,8 +116,11 @@ button.second-btn {
     gap: 10px;
     margin: 10px 0;
 }
-.item:nth-child(3n+4) {
-    border-bottom: 1px solid #aaa;
-    margin-bottom: 5px;
-    padding-bottom: 5px;
+.item{
+    background-color: rgba(170, 170, 170, 0.194);
+    padding: 6px;
+    border: 1px solid #aaa;
+}
+.item:nth-child(2n) {
+    background-color: rgba(154, 255, 184, 0.24);
 }

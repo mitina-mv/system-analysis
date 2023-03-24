@@ -70,7 +70,7 @@
                 <h4>Пути</h4>
 
                 <div class="item" v-for="(data, index) in dataGraph">
-                    Путь {{index + 1}} ({{data['start'] + 1}} - {{data['finish'] + 1}})
+                    Путь {{index + 1}} <b>({{data['start'] + 1}} - {{data['finish'] + 1}})  </b>
                     <span v-if="data['status']">
                         {{getString(data['path'])}}
                     </span>
@@ -79,7 +79,6 @@
                         {{data['path']}}
                     </span>
                 </div>
-
             </div>
 
         </div>
