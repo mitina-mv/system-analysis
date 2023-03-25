@@ -55,13 +55,58 @@ foreach($near as $sv => $arNear)
     }
 }
 // print_r($reverseNear);
-$posibleVertex = getPossibleVertex($near, 4);
-$unposibleVertex = getPossibleVertex($reverseNear, 4);
+$queuePosibleVertex = array_keys($near);
+$posibleVertex = getPossibleVertexReq($near, 1, $queuePosibleVertex);
+
+$queueUnposibleVertex = array_keys($reverseNear);
+$unposibleVertex = getPossibleVertexReq($reverseNear, 1, $queueUnposibleVertex);
+
 print_r($posibleVertex);
 print_r($unposibleVertex);
 
 $graph = array_intersect($posibleVertex, $unposibleVertex);
 print_r($graph);
+
+// пробуем рекурсию
+function getPossibleVertexReq($near, $vertex, &$queue)
+{
+    // если у вершины нет соседей, то из нее никуда нельзя прийти
+    if(!isset($near[$vertex])) {
+        $keyCurVertex = array_search ($vertex, $queue);
+        unset($queue[$keyCurVertex]);
+
+        return [$vertex];
+    }
+
+    // если мы прошли все вершины
+    if(count($queue) == 0)
+    {
+        echo "<h1>dsfd</h1>";
+        return [];
+    }
+
+    $set = array_merge([$vertex], $near[$vertex]);
+
+    $keyCurVertex = array_search ($vertex, $queue);
+    unset($queue[$keyCurVertex]);
+
+    foreach($near[$vertex] as $nearVertex)
+    {
+        
+        if(in_array($nearVertex, $queue)) {
+            $set = array_merge(
+                $set, 
+                getPossibleVertexReq($near, $nearVertex, $queue)
+            );
+    
+            $keyCurVertex = array_search ($nearVertex, $queue);
+            unset($queue[$keyCurVertex]);
+        }
+    }
+
+
+    return array_unique($set);
+}
 
 function getPossibleVertex($near, $vertex)
 {
