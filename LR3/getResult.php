@@ -4,14 +4,13 @@
 
 // множество левых инц
 $arr = [
-    [2, 4],
-    [4, 3, 5],
+    [3],
+    [1],
     [],
-    [4, 3],
-    [3, 4],
-    [2],
-    [5],
-    [2]
+    [2, 3],
+    [2, 4],
+    [4],
+    [4]
 ];
 
 echo "<pre>";
@@ -44,10 +43,27 @@ foreach($arr as $v2 => $vertex)
 }
 
 print_r($near);
-print_r(getPossibleVertex($near, 2));
+print_r(getPossibleVertex($near, 4));
+
+$reverseNear = [];
+
+foreach($near as $sv => $arNear)
+{
+    foreach($arNear as $ev)
+    {
+        $reverseNear[$ev][] = $sv;
+    }
+}
+print_r($reverseNear);
+print_r(getPossibleVertex($reverseNear, 4));
 
 function getPossibleVertex($near, $vertex)
 {
+    // если у вершины нет соседей, то из нее никуда нельзя прийти
+    if(!isset($near[$vertex])) {
+        return [$vertex];
+    }
+    
     $set = [];
     $set[] = $vertex;
 
@@ -97,9 +113,8 @@ function getPossibleVertex($near, $vertex)
         if(!in_array($curVertex, $queue))
             $stop = true;
     }
-    print_r($set);
 
-    return array_unique($set);
+    return array_values(array_unique($set));
 }
 
 
