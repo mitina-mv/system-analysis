@@ -6,11 +6,11 @@
 $arr = [
     [3],
     [1],
-    [],
-    [2, 3],
-    [2, 4],
     [4],
-    [4]
+    [2, 7],
+    [4, 7],
+    [4],
+    [6]
 ];
 
 echo "<pre>";
@@ -42,8 +42,8 @@ foreach($arr as $v2 => $vertex)
     }
 }
 
-print_r($near);
-print_r(getPossibleVertex($near, 4));
+// print_r($near);
+// print_r(getPossibleVertex($near, 4));
 
 $reverseNear = [];
 
@@ -54,8 +54,14 @@ foreach($near as $sv => $arNear)
         $reverseNear[$ev][] = $sv;
     }
 }
-print_r($reverseNear);
-print_r(getPossibleVertex($reverseNear, 4));
+// print_r($reverseNear);
+$posibleVertex = getPossibleVertex($near, 4);
+$unposibleVertex = getPossibleVertex($reverseNear, 4);
+print_r($posibleVertex);
+print_r($unposibleVertex);
+
+$graph = array_intersect($posibleVertex, $unposibleVertex);
+print_r($graph);
 
 function getPossibleVertex($near, $vertex)
 {
@@ -93,6 +99,9 @@ function getPossibleVertex($near, $vertex)
 
         $keyCurVertex = array_search ($curVertex, $queue);
         unset($queue[$keyCurVertex]);
+        $queue = array_values($queue);
+        
+        $lastNear = $near[$curVertex];
 
         // обновляем текущую вершину
         // выбираем среди ее соседей ту, которую еще не проходили и у которой есть соседи
@@ -103,6 +112,8 @@ function getPossibleVertex($near, $vertex)
                 && isset($near[$nearVertex])
             ) {
                 $curVertex = $nearVertex;
+                $set = array_merge($set, $near[$curVertex]);
+                // break;
             }
         }
 
@@ -110,8 +121,15 @@ function getPossibleVertex($near, $vertex)
         // значит, через foreach нам не удалось обновить вершину
         // либо у всех оставшихся нет соседей, либо они уже пройдены
         // вершины без соседей не будут удалены из очереди, т.к. в них мы просто не попадем
-        if(!in_array($curVertex, $queue))
+        if(!in_array($curVertex, $queue)) {
+            $curVertex = array_intersect($queue, $lastNear)[0];
+        }
+
+        if(!in_array($curVertex, $queue)) {
             $stop = true;
+
+        }
+            // $curVertex = $queue[0];
     }
 
     return array_values(array_unique($set));
