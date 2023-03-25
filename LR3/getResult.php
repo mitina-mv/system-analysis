@@ -1,17 +1,6 @@
 <?php
-// $json_str = file_get_contents('php://input'); 
-// $arr = json_decode($json_str, true);
-
-// множество левых инц
-$arr = [
-    [3],
-    [1],
-    [4],
-    [2],
-    [4, 7],
-    [4],
-    [6]
-];
+$json_str = file_get_contents('php://input'); 
+$arr = json_decode($json_str, true);
 
 // приведение входных данных к нужному виду
 foreach($arr as &$mass)
@@ -21,8 +10,6 @@ foreach($arr as &$mass)
         --$v;
     }
 }
-
-echo "<pre>";
 
 // функция получения достижимого множества вершин
 function getPossibleVertex($near, $vertex, &$queue)

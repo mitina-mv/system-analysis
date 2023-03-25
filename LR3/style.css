@@ -117,3 +117,10 @@ span.tab.active-tab {
 .tab-content.active-tab {
     display: block;
 }
+.item {
+    padding: 4px 4px 6px;
+    font-size: 20px;
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid #aaa;
+}

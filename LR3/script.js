@@ -3,12 +3,11 @@ const app = Vue.createApp({
         return {
             countVertex: 0,
             selectedTab: 0,
-            tabs: ['Исходная матрица смежности', 'Новая матрица смежности', 'Иерархические уровни'],
+            tabs: ['Компоненты связности', 'Матрица смежности по графу компонент', 'Справка по названиям ребер'],
             arrData: [],
-            lastMatrix: [],
-            newMatrix: [],
-            namesVertex: {},
-            levels: [],
+            matrix: [],
+            edges: [],
+            graphs: [],
             flag: false
         }
     },
@@ -32,9 +31,9 @@ const app = Vue.createApp({
             let tmpData = {};
             let flagIncorrectData = true;
 
-            this.lastMatrix = [];
-            this.newMatrix = [];
-            this.levels = [];
+            this.matrix = [];
+            this.edges = [];
+            this.graphs = [];
 
             // получение входных данных
             for(let i = 0; i < this.arrData.length; ++i)
@@ -68,13 +67,16 @@ const app = Vue.createApp({
                 axios
                     .post('./getResult.php', tmpData)
                     .then(response => {
-                        
+                        this.matrix = response.data.matrix
+                        this.edges = response.data.edges
+                        this.graphs = response.data.graphs
                     })
                     .catch(error => console.log(error));
             }
         },
-        getString: function(obj) {
-            return Object.keys(obj).map(v => Number(v) + 1).join(', ');
+        getString: function(arr, d = 1) 
+        {
+            return arr.map(v => Number(v) + d).join(', ');
         }
     }
 })
