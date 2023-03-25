@@ -7,13 +7,11 @@ $arr = [
     [3],
     [1],
     [4],
-    [2, 7],
+    [2],
     [4, 7],
     [4],
     [6]
 ];
-
-echo "<pre>";
 
 // приведение входных данных к нужному виду
 foreach($arr as &$mass)
@@ -23,52 +21,11 @@ foreach($arr as &$mass)
         --$v;
     }
 }
-// исходная матрица смежности
-$lastMatrixA = array_fill(
-    0, 
-    count($arr), 
-    array_fill(0, count($arr), 0)
-);
 
-// + создаем массив соседей
-$near = [];
+echo "<pre>";
 
-foreach($arr as $v2 => $vertex)
-{
-    foreach($vertex as $v1)
-    {
-        $lastMatrixA[$v1][$v2] = 1;
-        $near[$v1][] = $v2;
-    }
-}
-
-// print_r($near);
-// print_r(getPossibleVertex($near, 4));
-
-$reverseNear = [];
-
-foreach($near as $sv => $arNear)
-{
-    foreach($arNear as $ev)
-    {
-        $reverseNear[$ev][] = $sv;
-    }
-}
-// print_r($reverseNear);
-$queuePosibleVertex = array_keys($near);
-$posibleVertex = getPossibleVertexReq($near, 1, $queuePosibleVertex);
-
-$queueUnposibleVertex = array_keys($reverseNear);
-$unposibleVertex = getPossibleVertexReq($reverseNear, 1, $queueUnposibleVertex);
-
-print_r($posibleVertex);
-print_r($unposibleVertex);
-
-$graph = array_intersect($posibleVertex, $unposibleVertex);
-print_r($graph);
-
-// пробуем рекурсию
-function getPossibleVertexReq($near, $vertex, &$queue)
+// функция получения достижимого множества вершин
+function getPossibleVertex($near, $vertex, &$queue)
 {
     // если у вершины нет соседей, то из нее никуда нельзя прийти
     if(!isset($near[$vertex])) {
@@ -96,7 +53,7 @@ function getPossibleVertexReq($near, $vertex, &$queue)
         if(in_array($nearVertex, $queue)) {
             $set = array_merge(
                 $set, 
-                getPossibleVertexReq($near, $nearVertex, $queue)
+                getPossibleVertex($near, $nearVertex, $queue)
             );
     
             $keyCurVertex = array_search ($nearVertex, $queue);
@@ -104,84 +61,144 @@ function getPossibleVertexReq($near, $vertex, &$queue)
         }
     }
 
-
-    return array_unique($set);
+    return $set;
 }
 
-function getPossibleVertex($near, $vertex)
+
+
+// создаем массив соседей
+$near = array_fill(0, count($arr), []);
+// обратный массив соседей - перевернутый граф
+$reverseNear = array_fill(0, count($arr), []);
+
+$edges = [];
+
+foreach($arr as $v2 => $vertex)
 {
-    // если у вершины нет соседей, то из нее никуда нельзя прийти
-    if(!isset($near[$vertex])) {
-        return [$vertex];
+    foreach($vertex as $v1)
+    {
+        $near[$v1][] = $v2;
+        $reverseNear[$v2][] = $v1;
+
+        $edges["$v1-$v2"] = 0;
     }
+}
+
+ksort($edges);
+$numEdges = 0;
+
+foreach($edges as &$item)
+{
+    $item = ++$numEdges;
+}
+
+$responseEdges = $edges;
+
+// главная очередь - для вычитания вершин, которые входят в другие подграфы
+$mainQueue = array_keys($arr);
+
+// массив связных подграфов
+$arGraphs = [];
+
+foreach($arr as $v => $arr)
+{
+    if(!in_array($v, $mainQueue)) continue;
+
+    if(count($mainQueue) == 0)
+        break;
     
-    $set = [];
-    $set[] = $vertex;
+    // достижимое множество
+    $queuePosibleVertex = array_keys($near);
+    $posibleVertex = array_unique(
+        getPossibleVertex(
+            $near, 
+            $v, 
+            $queuePosibleVertex
+        )
+    );
+    
+    // недостижимое множество
+    $queueUnposibleVertex = array_keys($reverseNear);
+    $unposibleVertex = array_unique(
+        getPossibleVertex(
+            $reverseNear, 
+            $v, 
+            $queueUnposibleVertex
+        )
+    );
+    
+    // получаем пересечения множеств - выявление связного подграфа
+    $graph = array_intersect(
+        $posibleVertex, 
+        $unposibleVertex
+    );
+    
+    // получаем связный граф из числа доступные вершин (не вкл. в др. подграфы)
+    $resgraph = array_intersect($mainQueue, $graph);
+    
+    if(empty($resgraph)){
+        $keyVertex = array_search ($v, $mainQueue);
+        unset($mainQueue[$keyVertex]);
 
-    $curVertex = $vertex;
-    $stop = false;
-    $queue = array_keys($near);
-
-    // удаляем из очереди вершины без соседей
-    foreach($near as $v)
-    {
-        if(!isset($v))
-        {
-            $keyCurVertex = array_search ($v, $queue);
-            unset($queue[$keyCurVertex]);
-        }
+        continue;
     }
 
-    while(!$stop && count($queue) > 0)
+    $resedges = [];
+    foreach($resgraph as $lk => $lv)
     {
-        $stop = true;
+        $keyVertex = array_search ($lv, $mainQueue);
+        unset($mainQueue[$keyVertex]);
 
-        if(isset($near[$curVertex]))
+        if(count($resgraph) > 1 && isset($near[$lv]))
         {
-            $stop = false;
-            $set = array_merge($set, $near[$curVertex]);
-        }
-
-        $keyCurVertex = array_search ($curVertex, $queue);
-        unset($queue[$keyCurVertex]);
-        $queue = array_values($queue);
-        
-        $lastNear = $near[$curVertex];
-
-        // обновляем текущую вершину
-        // выбираем среди ее соседей ту, которую еще не проходили и у которой есть соседи
-        // наличие соседей обязательно, т. к. тупиковые вершины уже были занесены на пред. шаге
-        foreach($near[$curVertex] as $nearVertex)
-        {
-            if(in_array($nearVertex, $queue)
-                && isset($near[$nearVertex])
-            ) {
-                $curVertex = $nearVertex;
-                $set = array_merge($set, $near[$curVertex]);
-                // break;
+            foreach($near[$lv] as $nv)
+            {
+                if(in_array($nv, $resgraph))
+                {
+                    $resedges[] = $edges["$lv-$nv"];
+                    unset($edges["$lv-$nv"]);
+                }
             }
         }
-
-        // если текущей вершины нет в очереди, то она уже была удалена
-        // значит, через foreach нам не удалось обновить вершину
-        // либо у всех оставшихся нет соседей, либо они уже пройдены
-        // вершины без соседей не будут удалены из очереди, т.к. в них мы просто не попадем
-        if(!in_array($curVertex, $queue)) {
-            $curVertex = array_intersect($queue, $lastNear)[0];
-        }
-
-        if(!in_array($curVertex, $queue)) {
-            $stop = true;
-
-        }
-            // $curVertex = $queue[0];
     }
 
-    return array_values(array_unique($set));
+    $arGraphs[] = [
+        'vertex' => array_values($resgraph),
+        'edges' => $resedges
+    ];
 }
 
+$arVertexGraph = array_column($arGraphs, 'vertex');
 
-/* echo json_encode([
-    'lastMatrix' => $lastMatrixA,
+$matrixA = array_fill(
+    0, 
+    count($arGraphs), 
+    array_fill(0, count($arGraphs), 0)
+);
 
-]); */
+foreach($edges as $key => $num)
+{
+    $v = explode('-', $key);
+    
+    $start = null;
+    $finish = null;
+
+    foreach($arVertexGraph as $keyArr => $arr)
+    {
+        if(in_array($v[0], $arr))
+            $start = $keyArr;
+
+        if(in_array($v[1], $arr))
+            $finish = $keyArr;
+    }
+
+    if($start !== null && $finish !== null) {
+        $matrixA[$start][$finish] = 1;
+    }
+}
+
+echo json_encode([
+    'matrix' => $matrixA,
+    'graphs' => $arGraphs,
+    'edges' => $responseEdges
+]);
