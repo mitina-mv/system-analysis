@@ -2,14 +2,19 @@
 $json_str = file_get_contents('php://input'); 
 $arr = json_decode($json_str, true);
 
+$responseEdges = [];
+$numEdges = 0;
 // приведение входных данных к нужному виду
-foreach($arr as &$mass)
+foreach($arr as $key => &$mass)
 {
     foreach($mass as &$v)
     {
+        $v1 = $key + 1;
+        $responseEdges["$v1-$v"] = ++$numEdges;
         --$v;
     }
 }
+ksort($responseEdges);
 
 // функция получения достижимого множества вершин
 function getPossibleVertex($near, $vertex, &$queue)
@@ -78,8 +83,6 @@ foreach($edges as &$item)
 {
     $item = ++$numEdges;
 }
-
-$responseEdges = $edges;
 
 // главная очередь - для вычитания вершин, которые входят в другие подграфы
 $mainQueue = array_keys($arr);
@@ -177,10 +180,12 @@ foreach($edges as $key => $num)
 
         if(in_array($v[1], $arr))
             $finish = $keyArr;
+
+        if($start !== null && $finish !== null) break;
     }
 
     if($start !== null && $finish !== null) {
-        $matrixA[$start][$finish] = 1;
+        $matrixA[$finish][$start] = 1;
     }
 }
 
