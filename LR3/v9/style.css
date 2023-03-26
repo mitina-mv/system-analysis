@@ -1,0 +1,122 @@
+.table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 75px);
+}
+
+.table-col {
+    display: grid;
+}
+
+.table-col > div {
+    border: 1px solid;
+    padding: 5px;
+    min-height: 20px;
+}
+.table-col > .th {
+    text-align: center;
+    font-weight: bold;
+}
+
+button {
+    background: none;
+    border: none;
+    padding: 10px 24px;
+    font-family: "Arial";
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 20px;
+}
+
+button.primary-btn {
+    background: #e7e7ff;
+    color: #02157c;
+}
+
+body {
+    font-family: "Arial";
+    margin: 0;
+    padding: 20px;
+}
+
+button.second-btn {
+    background: #ffdada;
+    color: #9d0000;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+input[type="text"], input[type="number"] {
+    border-radius: 20px;
+    border: 1px solid #bbb;
+    padding: 8px 16px;
+    width: 100%;
+}
+
+.form-field {
+    display: flex;
+    gap: 10px;
+    align-content: center;
+    align-items: center;
+    width: 50%;
+}
+
+.input-items {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+p.info {
+    width: 50%;
+    padding: 16px;
+    background: #e7ffce;
+    border-radius: 20px;
+}
+
+p.result-panel__no-data.teh-info {
+    padding: 16px;
+    border-radius: 10px;
+    background: #e8e8e8;
+    width: 50%;
+}
+p.result-panel__no-data.error {
+    background: #ffdada;
+    color: #6a0202;
+    font-weight: bolder;
+}
+.result-body {
+    display: grid;
+    gap: 4px;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid #000;
+    width: 50%;
+    font-family: 'Consolas';
+    font-weight: 600;
+}
+.table-edges {
+    position: absolute;
+    top: 20px;
+    left: 60%;
+    display: grid;
+    padding: 20px;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+    gap: 5px;
+    font-size: 18px;
+    font-family: monospace;
+}
+.item{
+    background-color: rgba(170, 170, 170, 0.194);
+    padding: 6px;
+    border: 1px solid #aaa;
+    display: flex;
+    gap: 10px;
+    width: 50%;
+}
+.item:nth-child(2n) {
+    background-color: rgba(154, 255, 184, 0.24);
+}
