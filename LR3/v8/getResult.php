@@ -14,7 +14,6 @@ foreach($arr as $key => &$mass)
         --$v;
     }
 }
-ksort($responseEdges);
 
 // функция получения достижимого множества вершин
 function getPossibleVertex($near, $vertex, &$queue)
@@ -30,7 +29,6 @@ function getPossibleVertex($near, $vertex, &$queue)
     // если мы прошли все вершины
     if(count($queue) == 0)
     {
-        echo "<h1>dsfd</h1>";
         return [];
     }
 
@@ -65,9 +63,9 @@ $reverseNear = array_fill(0, count($arr), []);
 
 $edges = [];
 
-foreach($arr as $v2 => $vertex)
+foreach($arr as $v1 => $vertex)
 {
-    foreach($vertex as $v1)
+    foreach($vertex as $v2)
     {
         $near[$v1][] = $v2;
         $reverseNear[$v2][] = $v1;
@@ -83,6 +81,8 @@ foreach($edges as &$item)
 {
     $item = ++$numEdges;
 }
+
+// $responseEdges = $edges;
 
 // главная очередь - для вычитания вершин, которые входят в другие подграфы
 $mainQueue = array_keys($arr);
@@ -116,6 +116,7 @@ foreach($arr as $v => $arr)
             $queueUnposibleVertex
         )
     );
+
     
     // получаем пересечения множеств - выявление связного подграфа
     $graph = array_intersect(
@@ -160,11 +161,7 @@ foreach($arr as $v => $arr)
 
 $arVertexGraph = array_column($arGraphs, 'vertex');
 
-$matrixA = array_fill(
-    0, 
-    count($arGraphs), 
-    array_fill(0, count($arGraphs), 0)
-);
+$matrix = array_fill(0, count($arGraphs), []);
 
 foreach($edges as $key => $num)
 {
@@ -185,12 +182,17 @@ foreach($edges as $key => $num)
     }
 
     if($start !== null && $finish !== null) {
-        $matrixA[$finish][$start] = 1;
+        $matrix[$finish][] = $start;
     }
 }
 
+foreach($matrix as &$arr)
+{
+    $arr = array_unique($arr);
+}
+
 echo json_encode([
-    'matrix' => $matrixA,
+    'matrix' => $matrix,
     'graphs' => $arGraphs,
     'edges' => $responseEdges
 ]);
