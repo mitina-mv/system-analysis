@@ -185,7 +185,8 @@ foreach($edges as $key => $num)
     }
 
     if($start !== null && $finish !== null) {
-        $matrixA[$finish][$start] = 1;
+        // $matrixA[$finish][$start] = 1;
+        $matrixA[$start][$finish] = 1;
     }
 }
 
