@@ -2,10 +2,7 @@ const app = Vue.createApp({
     data(){
         return {
             countVertex: 0,
-            selectedTab: 0,
-            tabs: ['Исходная матрица смежности', 'Новая матрица смежности', 'Иерархические уровни'],
             arrData: [],
-            lastMatrix: [],
             newMatrix: [],
             namesVertex: {},
             levels: [],
@@ -31,8 +28,7 @@ const app = Vue.createApp({
         {
             let tmpData = {};
             let flagIncorrectData = true;
-
-            this.lastMatrix = [];
+            
             this.newMatrix = [];
             this.levels = [];
 
@@ -68,7 +64,6 @@ const app = Vue.createApp({
                 axios
                     .post('/LR2/getResult.php', tmpData)
                     .then(response => {
-                        this.lastMatrix = response.data.lastMatrix;
                         this.newMatrix = response.data.newMatrix;
                         this.levels = response.data.levels;
                         this.namesVertex = response.data.namesVertex;
@@ -78,6 +73,11 @@ const app = Vue.createApp({
         },
         getString: function(obj) {
             return Object.keys(obj).map(v => Number(v) + 1).join(', ');
+        },
+        remove(){
+            this.countVertex = 0;
+            this.flag = false;
+            this.arrData = [];
         }
     }
 })

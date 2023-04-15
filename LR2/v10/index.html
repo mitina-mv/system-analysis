@@ -5,12 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>LR1</title>
+    <title>Лаба 2</title>
 </head>
 <body>
     <div id="app">
+        <h1>ЛР2. Вариант 10</h1>
+        <h3><u>Задание:</u> Вводим мн-во левых инцеденций G<sup>-1</sup>(i). Получаем иерархические уровни матрицу смежности А с указанием новых и старых номеров вершин.</h3>
+
         <div class="control-panel">
-            <h3>Шаг 1. Определите количество вершин</h3>
             <div class="form-field">
                 <label for="countVertex">Количество вершин</label>
                 <input type="number" name="countVertex" id="" v-model="countVertex" min=0 @change="addDataInput">
@@ -18,53 +20,40 @@
         </div>
 
         <div class="data-panel">
-            <h3>Шаг 2. Введите множество левых инцеденций G<sup>-1</sup>(i)</h3>
-            <p class="info">Матрица G<sup>-1</sup>(i) левых инциденций определяет все вершины, из которых можно попасть в вершину i</p>
-            <p class="teh-info">Введите вершины через ", " (запятая и пробел).</p>
+            <p>Введите вершины через ", " (запятая и пробел). Например: 1, 3 или 4. Для последней вершины ставить запятую не нужно.</p>
 
             <div class="input-items">
                 <div class="form-field" v-for="(item, index) in arrData">
-                    <label :for="'data-' + index">G({{ index + 1 }})</label>
-                    <input type="text" :name="'data-' + index" id="" v-model="arrData[index]" placeholder="1, 3">
+                    <label :for="'data-' + index">G({{ index + 1 }}) = </label>
+                    <input type="text" :name="'data-' + index" id="" v-model="arrData[index]">
                 </div>
             </div>
 
             <button @click='getResult()' @keyup.enter="getResult()">Результат</button>
+            <button class="second-btn" @click='remove()'>Стереть</button>
         </div>
 
         <div class="result-panel" v-if='flag'>
-            <h3>Шаг 3. Результаты вычислений</h3>
+            <h3>Результаты</h3>
 
-            <div class="tabs">
-            <span class="tab" 
-                    v-for="(tab, index) in tabs" 
-                    @click="selectedTab = index"
-                    :class='selectedTab == index ? "active-tab" : ""'
-            >{{ tab }}</span>
-            </div>
-
-            <div class="tab-content" :class='selectedTab == 0 ? "active-tab" : ""'>
-                <h4>3.1 Исходная матрица смежности</h4>
-
+            <div class="tab-content">
+                <h4>Иерархические уровни</h4>
                 <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th v-for="(item, index) in arrData">{{index + 1}}</th>
-                        </tr>
-                    </thead>
-
                     <tbody>
-                        <tr v-for="(row, index) in lastMatrix">
-                            <th>{{index + 1}}</th>
-                            <td v-for="(item, ind) in row">{{item}}</td>
+                        <tr v-for="(row, index) in levels">
+                            <th>
+                                {{index}}-й уровень:
+                            </th>
+                            <td>
+                                {{ getString(row) }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="tab-content" :class='selectedTab == 1 ? "active-tab" : ""'>
-                <h4>3.2 Новая матрица смежности</h4>
+            <div class="tab-content">
+                <h4>Матрица смежности (с новыми и старыми именами вершин)</h4>
 
                 <table>
                     <thead>
@@ -87,23 +76,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-
-            <div class="tab-content" :class='selectedTab == 2 ? "active-tab" : ""'>
-                <h4>3.3 Иерархические уровни</h4>
-                <table>
-                    <tbody>
-                        <tr v-for="(row, index) in levels">
-                            <th>
-                                {{index}}-й уровень:
-                            </th>
-                            <td>
-                                {{ getString(row) }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
             </div>
         </div>
         <p class="result-panel__no-data teh-info" v-else>
