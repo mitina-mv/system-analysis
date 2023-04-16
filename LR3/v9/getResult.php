@@ -162,7 +162,7 @@ foreach($arr as $v => $arr)
 $arVertexGraph = array_column($arGraphs, 'vertex');
 
 $matrixB = [];
-$edgeName = 1;
+$egdeName = 1;
 
 foreach($edges as $key => $num)
 {
@@ -184,13 +184,17 @@ foreach($edges as $key => $num)
     }
 
     if($start !== null && $finish !== null) {
-        $keyB = "$edgeName ($nameVertexStart - $nameVertexFinish)";
-        $matrixB[$keyB] = array_fill(0, count($arGraphs), 0);
+        $keyB = "$start - $finish";
+        if(!$matrixB[$keyB])
+        {
+            $matrixB[$keyB]['name'] = $egdeName;
+            $matrixB[$keyB]['row'] = array_fill(0, count($arGraphs), 0);
 
-        $matrixB[$keyB][$start] = 1;
-        $matrixB[$keyB][$finish] = -1;
+            $matrixB[$keyB]['row'][$start] = 1;
+            $matrixB[$keyB]['row'][$finish] = -1;
 
-        ++$edgeName;
+            ++$egdeName;
+        }
     }
 }
 

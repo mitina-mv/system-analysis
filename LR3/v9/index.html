@@ -62,8 +62,8 @@
                         </div>
 
                         <div class="table-col" v-for="(arr, edge) in matrix">
-                            <div class="th">{{edge}}</div>
-                            <div v-for="(item, index) in arr">{{item}}</div>
+                            <div class="th">{{ arr.name }}</div>
+                            <div v-for="(item, index) in arr.row">{{ item }}</div>
                         </div>
                     </div>
 
