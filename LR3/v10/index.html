@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Лаба 3</title>
+</head>
+<body>
+    <div id="app">
+        <h1>ЛР3. Вариант 10</h1>
+        <h3><u>Задание:</u> Вводим мн-во левых инцеденций G<sup>-1</sup>(i). Выделяем подграфы с указанием входящих вершин и дуг. Отображаем матрицу смежности А по графу из подграфов</h3>
+
+        <div class="control-panel">
+            <div class="form-field">
+                <label for="countVertex">Количество вершин</label>
+                <input type="number" name="countVertex" id="" v-model="countVertex" min=0 @change="addDataInput">
+            </div>
+        </div>
+
+        <div class="data-panel">
+            <p>Введите вершины через ", " (запятая и пробел). Например: 1, 3 или 4. Для последней вершины ставить запятую не нужно.</p>
+
+            <div class="input-items">
+                <div class="form-field" v-for="(item, index) in arrData">
+                    <label :for="'data-' + index">G({{ index + 1 }}) = </label>
+                    <input type="text" :name="'data-' + index" id="" v-model="arrData[index]">
+                </div>
+            </div>
+
+            <button @click='getResult()' @keyup.enter="getResult()">Результат</button>
+            <button class="second-btn" @click='remove()'>Стереть</button>
+        </div>
+
+        <div class="result-panel" v-if='flag'>
+            <h3>Результаты</h3>
+
+            <div class="tab-content">
+                <h4>Подграфы</h4>
+
+                <div class="graphs-items">
+                    <div class="item" v-for="(item, index) in graphs">
+                        <b>G{{index + 1}}</b>
+                        <span class="vertex">( {{getString(item.vertex)}} )</span>
+                        <span class="edges">Дуги ( {{getString(item.edges, 0)}} )</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4>Матрица</h4>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th v-for="(arr, index) in matrix">
+                                G{{ index + 1 }}
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr v-for="(arr, index) in matrix">
+                            <th>
+                                G{{ index + 1 }}
+                            </th>
+                            <td v-for="(item, ind) in arr">
+                                {{item}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-content" :class='selectedTab == 2 ? "active-tab" : ""'>
+                <h4>Ребра (для уточнения)</h4>
+                
+                <div class="edges-item" v-for="(name, edgeName) in edges">
+                    {{edgeName}} : {{name}}
+                </div>
+            </div>
+        </div>
+        <p class="result-panel__no-data teh-info" v-else>
+            Тут будет результат.
+        </p>
+    </div>
+    
+    <script src="/plagins/vue3.0/vue.js"></script>
+    <script src="/plagins/axios/axios.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
