@@ -3,8 +3,9 @@ const app = Vue.createApp({
         return {
             countVertex: 0,
             arrData: [],
-            adjacencyMatrix: [],
-            incidenceMatrix: [],
+            matrix: [],
+            edges: [],
+            graphs: [],
             flag: false
         }
     },
@@ -25,52 +26,33 @@ const app = Vue.createApp({
         },
         getResult: function()
         {
-            let tmpData;
-            let flagIncorrectData = false;
-            this.adjacencyMatrix = [];
-            this.incidenceMatrix = [];
-            let tmpIncidenceMatrix = {};
+            let tmpData = {};
+            let flagIncorrectData = true;
 
-            // заполняю матрицу начальными нулями
-            for(let i = 0; i < this.countVertex; ++i)
-            {
-                this.adjacencyMatrix[i] = [];
-                for(let j = 0; j < this.countVertex; ++j)
-                {
-                    this.adjacencyMatrix[i][j] = 0;
-                }
-            }
+            this.matrix = [];
+            this.edges = [];
+            this.graphs = [];
 
+            // получение входных данных
             for(let i = 0; i < this.arrData.length; ++i)
-            {
-                tmpData = this.arrData[i].split(', ');
+            {                
+                tmpData[i] = this.arrData[i].split(', ');
 
-                if(this.arrData[i] == '') continue;
+                if(this.arrData[i] == '')
+                {
+                    tmpData[i] = [];
+                    continue;
+                } 
 
-                tmpData.forEach(j => {
-                    if(isNaN(j) || (j <= 0 || j > this.countVertex)) {
-                        flagIncorrectData = true;
-                        return;
-                    }
-
-                    this.adjacencyMatrix[j - 1][i] = 1;
-
-                    tmpIncidenceMatrix[`${j}-${i + 1}`] = {};
-
-                    for(let k = 1; k <= this.countVertex; ++k)
+                flagIncorrectData = tmpData[i].every(j => {
+                    if(isNaN(j) || (Number(j) <= 0 || Number(j) > this.countVertex))
                     {
-                        tmpIncidenceMatrix[`${j}-${i + 1}`][k] = 0;
-                    }
-
-                    if(j == (i + 1)){
-                        tmpIncidenceMatrix[`${j}-${i + 1}`][j] = 2;
-                    } else {
-                        tmpIncidenceMatrix[`${j}-${i + 1}`][i + 1] = -1;
-                        tmpIncidenceMatrix[`${j}-${i + 1}`][j] = 1;
-                    }
+                        return false;
+                    } 
+                    else return true;
                 });
 
-                if(flagIncorrectData) {
+                if(!flagIncorrectData) {
                     this.flag = false;
                     break;
                 }
@@ -78,21 +60,21 @@ const app = Vue.createApp({
                 this.flag = true;
             }
 
-            if(this.flag) {
-                // сортировка для ребер
-                tmpIncidenceMatrix = Object.keys(tmpIncidenceMatrix).sort().reduce(
-                    (obj, key) => {
-                      obj[key] = tmpIncidenceMatrix[key];
-                      return obj;
-                    },
-                    {}
-                );
-
-                for(let edge in tmpIncidenceMatrix)
-                {
-                    this.incidenceMatrix.push(tmpIncidenceMatrix[edge]);
-                }
+            if(this.flag)
+            {                
+                axios
+                    .post('./getResult.php', tmpData)
+                    .then(response => {
+                        this.matrix = response.data.matrix
+                        this.edges = response.data.edges
+                        this.graphs = response.data.graphs
+                    })
+                    .catch(error => console.log(error));
             }
+        },
+        getString: function(arr, d = 1) 
+        {
+            return arr.map(v => Number(v) + d).join(', ');
         },
         remove(){
             this.countVertex = 0;

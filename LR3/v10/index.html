@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>LR1</title>
+    <title>Лаба 3</title>
 </head>
 <body>
     <div id="app">
-        <h1>ЛР1. Вариант 10</h1>
-        <h3><u>Задание:</u> Вводим мн-во левых инцеденций G<sup>-1</sup>(i). Получаем матрицы смежности и инциденций</h3>
+        <h1>ЛР3. Вариант 10</h1>
+        <h3><u>Задание:</u> Вводим мн-во левых инцеденций G<sup>-1</sup>(i). Выделяем подграфы с указанием входящих вершин и дуг. Отображаем матрицу смежности А по графу из подграфов</h3>
 
         <div class="control-panel">
             <div class="form-field">
@@ -36,46 +36,59 @@
         <div class="result-panel" v-if='flag'>
             <h3>Результаты</h3>
 
-            <div class="result-adjacency-matrix">
-                <h4>Матрица смежности А</h4>
+            <div class="tab-content">
+                <h4>Подграфы</h4>
+
+                <div class="graphs-items">
+                    <div class="item" v-for="(item, index) in graphs">
+                        <b>G{{index + 1}}</b>
+                        <span class="vertex">( {{getString(item.vertex)}} )</span>
+                        <span class="edges">Дуги ( {{getString(item.edges, 0)}} )</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4>Матрица</h4>
+
                 <table>
                     <thead>
                         <tr>
                             <th></th>
-                            <th v-for="(item, index) in arrData">{{index + 1}}</th>
+                            <th v-for="(arr, index) in matrix">
+                                G{{ index + 1 }}
+                            </th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        <tr v-for="(row, index) in adjacencyMatrix">
-                            <th>{{index + 1}}</th>
-                            <td v-for="(item, ind) in row">{{item}}</td>
+                        <tr v-for="(arr, index) in matrix">
+                            <th>
+                                G{{ index + 1 }}
+                            </th>
+                            <td v-for="(item, ind) in arr">
+                                {{item}}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="result-incidence-matrix">
-                <h4>Матрица инциденций В</h4>
-                <div class="table">
-                    <div class="table-col">
-                        <div> </div>
-                        <div class='th' v-for="(item, index) in arrData">{{index + 1}}</div>
-                    </div>
-
-                    <div class="table-col" v-for="(row, name) in incidenceMatrix">
-                        <div class='th'>{{name + 1}}</div>
-                        <div v-for="(item, index) in row">{{item}}</div>
-                    </div>
+            <div class="tab-content" :class='selectedTab == 2 ? "active-tab" : ""'>
+                <h4>Ребра (для уточнения)</h4>
+                
+                <div class="edges-item" v-for="(name, edgeName) in edges">
+                    {{edgeName}} : {{name}}
                 </div>
             </div>
         </div>
         <p class="result-panel__no-data teh-info" v-else>
-            Тут будут результаты!
+            Тут будет результат.
         </p>
     </div>
     
     <script src="/plagins/vue3.0/vue.js"></script>
+    <script src="/plagins/axios/axios.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
