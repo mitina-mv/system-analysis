@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>LR1</title>
+</head>
+<body>
+    <div id="app">
+        <h1>ЛР1. Вариант 10</h1>
+        <h3><u>Задание:</u> Вводим мн-во левых инцеденций G<sup>-1</sup>(i). Получаем матрицы смежности и инциденций</h3>
+
+        <div class="control-panel">
+            <div class="form-field">
+                <label for="countVertex">Количество вершин</label>
+                <input type="number" name="countVertex" id="" v-model="countVertex" min=0 @change="addDataInput">
+            </div>
+        </div>
+
+        <div class="data-panel">
+            <p>Введите вершины через ", " (запятая и пробел). Например: 1, 3 или 4. Для последней вершины ставить запятую не нужно.</p>
+
+            <div class="input-items">
+                <div class="form-field" v-for="(item, index) in arrData">
+                    <label :for="'data-' + index">G({{ index + 1 }}) = </label>
+                    <input type="text" :name="'data-' + index" id="" v-model="arrData[index]">
+                </div>
+            </div>
+
+            <button @click='getResult()' @keyup.enter="getResult()">Результат</button>
+            <button class="second-btn" @click='remove()'>Стереть</button>
+        </div>
+
+        <div class="result-panel" v-if='flag'>
+            <h3>Результаты</h3>
+
+            <div class="result-adjacency-matrix">
+                <h4>Матрица смежности А</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th v-for="(item, index) in arrData">{{index + 1}}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr v-for="(row, index) in adjacencyMatrix">
+                            <th>{{index + 1}}</th>
+                            <td v-for="(item, ind) in row">{{item}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="result-incidence-matrix">
+                <h4>Матрица инциденций В</h4>
+                <div class="table">
+                    <div class="table-col">
+                        <div> </div>
+                        <div class='th' v-for="(item, index) in arrData">{{index + 1}}</div>
+                    </div>
+
+                    <div class="table-col" v-for="(row, name) in incidenceMatrix">
+                        <div class='th'>{{name + 1}}</div>
+                        <div v-for="(item, index) in row">{{item}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="result-panel__no-data teh-info" v-else>
+            Тут будут результаты!
+        </p>
+    </div>
+    
+    <script src="/plagins/vue3.0/vue.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
