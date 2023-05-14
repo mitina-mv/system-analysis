@@ -27,7 +27,7 @@
                 <div class="table-col" v-for="(arr, index) in arrData">
                     <div class="th">{{ index + 1 }}</div>
                     <div class="td" v-for="(item, ind) in arr">
-                        <input type="number" :name="'vertex[' + ind + ']'" id="" v-model="arrData[ind][index]"  min=0>
+                        <input type="number" :name="'vertex[' + ind + ']'" id="" v-model="arrData[ind][index]"  min=0 :disabled="index == ind ? true : false">
                     </div>
                 </div>
             </div>

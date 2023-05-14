@@ -21,7 +21,10 @@ const app = Vue.createApp({
                 this.arrData.push([]);
                 for(let j = 0; j < this.countVertex; ++j)
                 {
-                    this.arrData[i][j] = 0;
+                    // if(i !== j)
+                        this.arrData[i][j] = 0;
+                    // else
+                        // this.arrData[i][j] = '';
                 }
             }
 
