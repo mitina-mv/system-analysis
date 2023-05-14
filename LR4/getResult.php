@@ -4,6 +4,8 @@ $data = json_decode($json_str, true);
 
 $graph = $data['graph'];
 
+// echo "<pre>";
+
 // реализация алгоритма прима
 function prim(&$graph, $start)
 {
@@ -13,10 +15,12 @@ function prim(&$graph, $start)
 
     foreach (array_keys($graph) as $k) {
         $q[$k] = INF; // по умолчанию бесконечны
+        $w[$k] = INF; // по умолчанию бесконечны
         $path[$k] = 0; // пути 0 для вычислений
     }
 
-    $q[$start] = 0; // вес ребра для старта = 0
+    $q[$start] = 0; // вес ребра для старта = 0 - старый вариант
+    $w[$start] = 0; // вес ребра для старта = 0
     $p[$start] = NULL; // нет родителя
     $lastQueue = []; // для фиксирование предыдущего состояния очереди - чтобы суметь выйти, если путя нет
 
@@ -29,24 +33,47 @@ function prim(&$graph, $start)
 
         // перебираем граф и устанавливаем новые значения, если можно и вес ребра меньше
         foreach ($graph[$u] as $v => $weight) {
-            if ($weight > 0 && in_array($v, $keys) && $weight < $q[$v]) {
+            if ($weight > 0 && in_array($v, $keys) && $weight < $w[$v]) {
                 $p[$v] = $u;
                 $q[$v] = $weight;                
+                $w[$v] = $weight;              
             }
         }
 
         $lastQueue = $q;
-
         unset($q[$u]);
 
+        $flag = true;
+        foreach($q as $weight)
+        {
+            if($weight !== INF)
+                $flag = false;
+        }
+
         // условие выхода при наличии бесконечности
-        if($lastQueue == $q)
+        
+        // if($start == 0){
+            
+        //     // echo "u = " . $u;
+        //     // print_r($graph[$u]);
+        //     echo '"$lastQueue"' . $u;
+        //     print_r($lastQueue);
+        //     echo '"$p"' . $u;
+        //     print_r($p);
+        // }
+
+        if($lastQueue == $q
+            || count($p) == 1
+            || $flag
+        )
         {
             break;
         }
 
+        
         asort($q);
     }
+    
 
     // построение корректного остовного дерева (с правильным следованием)
     $curVertex = $start;
@@ -57,14 +84,15 @@ function prim(&$graph, $start)
     // удаляются вершины, в которые пути бесконечны, чтобы не попасть в цикл без выхода
     foreach($q as $v)
     {
-        if($v == $start || $lastQueue[$v] == INF)
+        if($v == $start || (isset($lastQueue[$v]) && $lastQueue[$v] == INF))
         {
             unset($q[$v]);
         }
     }
-
     $newP[$start] = NULL;
     unset($lastP[$start]);
+
+    // print_r($p);
 
     // выстраивание корретного дерева
     while(count($q) > 0)
@@ -84,6 +112,11 @@ function prim(&$graph, $start)
             $curVertex = current($q);
         }
     }
+
+    
+    
+    // if($start == 0)
+    // print_r($newP);
 
     // получение путей с учетом корректного дерева
     foreach($newP as $outV => $innerV)

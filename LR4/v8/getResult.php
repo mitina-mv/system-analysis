@@ -4,6 +4,8 @@ $data = json_decode($json_str, true);
 
 $graph = $data['graph'];
 
+// echo "<pre>";
+
 function getShortPath($graph, $frNode, $toNode)
 {
     $nodes = []; // вершинки
@@ -37,7 +39,7 @@ function getShortPath($graph, $frNode, $toNode)
     while(count($queue) > 0)
     {
         $min = INF; // минимум тоже бесконечный
-        $curNode = null;
+        $curNode = NULL;
         
         // переираем непройденные вершины
         foreach ($queue as $node)
@@ -49,15 +51,17 @@ function getShortPath($graph, $frNode, $toNode)
                 $curNode = $node; // вершину запоминаем
             }
         }
-
         
         // если расстояние до этой вершины бесконечно или она целевая, то выходим из while
         // бесконечное расстояние говорит о том, что в вершину нет пути
-        if($dist[$curNode] == INF || $curNode == $toNode || $curNode === null)
+        if($curNode === NULL 
+            || $curNode == $toNode 
+            || $dist[$curNode] == INF
+        )
         {
             break;
         }
-
+        // это удаление из очереди
         $queue = array_values(array_diff($queue, [$curNode]));
 
         // отмечаем текущую вершину пройденной и удаляем из "очереди"
@@ -65,7 +69,7 @@ function getShortPath($graph, $frNode, $toNode)
         // ЗДЕСЬ ИДЕТ ПЕРЕСЧЕТ МЕТОК - ПУТЕЙ ДО ВЕРШИН ///
 
         // если у данной вершины есть смежные вершины
-        if ($matrix[$curNode]) {
+        if (isset($matrix[$curNode])) {
             // перебираем смежные вершины
             foreach ($matrix[$curNode] as $nodeEdge) 
             {
