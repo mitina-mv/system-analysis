@@ -18,6 +18,20 @@ function array_multisum($arr)
     return $sum; 
 }
 
+function svyzGraph($g, $n)
+{
+    $flag = true;
+    $check = ($n - 1) / 2;
+
+    foreach($g as $cell)
+    {
+        if($cell < $check)
+            $flag = false;
+    }
+
+    return $flag;
+}
+
 // создаем матрицу А - смежности
 $matrixA = [];
 foreach($arr as $vertex => $arrVertex)
@@ -55,111 +69,35 @@ foreach($matrixANeor as $v => $row)
     $g[$v] = array_sum($row);
 }
 
-// расчет eps
-$eps = 0;
-foreach($g as $cell)
+$eps = NULL;
+if($r >= 0)
 {
-    $eps += ($cell - $gsred) ** 2;
+    // расчет eps
+    $eps = 0;
+    foreach($g as $cell)
+    {
+        $eps += ($cell - $gsred) ** 2;
+    }
 }
+
+$messR = '';
+switch(true)
+{
+    case $r < 0:
+        $messR = 'несвязная система';
+        break;
+    case $r == 0:         
+        $messR = 'связная система';
+        break;
+    default:
+        $messR = 'надежная система';
+}
+
 
 echo json_encode([
     'r' => $r,
-    'eps' => $eps,
+    'eps' => $eps === NULL ? "-" : round($eps, 3),
     'matrixA' => $matrixA,
-    'stepeniVartex' => $g
+    'stepeniVartex' => $g,
+    'messR' => $messR
 ]);
-// print_r($eps);
-// print_r($g);
-// print_r($gsred);
-
-// echo "<pre>";
-// умножение матриц
-/* function multiply(&$mat1, &$mat2, &$res)
-{
-    $N = count($mat1);
-    for ($i = 0; $i < $N; $i++)
-    {
-        for ($j = 0; $j < $N; $j++)
-        {
-            $res[$i][$j] = 0;
-            for ($k = 0; $k < $N; $k++)
-                $res[$i][$j] += $mat1[$i][$k] * 
-                                $mat2[$k][$j];
-        }
-    }
-}
-
-
-
-function getAsum($arMartix, $count)
-{
-    $resA = array_fill(0, $count, array_fill(0, $count, 0));
-
-    foreach($arMartix as $matrix)
-    {
-        foreach($matrix as $v1 => $row)
-        {
-            foreach($row as $v2 => $cell)
-            {
-                $resA[$v1][$v2] += $cell;
-            }
-        }
-    }
-
-    return $resA;
-}
-
-// создаем матрицу А - смежности
-$matrixA = [];
-foreach($arr as $vertex => $arrVertex)
-{
-    $matrixA[$vertex] = array_fill(0, count($arr), 0);
-
-    foreach($arrVertex as $v)
-    {
-        $matrixA[$vertex][$v - 1] = 1;
-    }
-}
-
-$arStepenMatrix = [];
-$arStepenMatrix[1] = $matrixA;
-$k = 2;
-$curSum = array_multisum($matrixA);
-
-while($curSum !== 0)
-{
-    // возводим в степень k )
-    $tmp = [];
-    multiply($arStepenMatrix[$k - 1], $matrixA, $arStepenMatrix[$k]);
-    $curSum = array_multisum($arStepenMatrix[$k]);
-    ++$k;
-
-    if($k > 7)
-    {
-        break;
-    }
-}
-
-if($k > 2)
-    unset($arStepenMatrix[$k - 1]);
-   
-$resA = getAsum($arStepenMatrix, count($arr));
-$resC = array_fill(0, count($arr), array_fill(0, count($arr), 0));
-
-foreach($resA as $v1 => $row)
-{
-    foreach($row as $v2 => $cell)
-    {
-        if($cell > 0)
-        {
-            $resC[$v1][$v2] = 1;
-        }
-    }
-}
-
-echo json_encode([
-    'matrixA' => $matrixA,
-    'stepenA' => $arStepenMatrix,
-    'resA' => $resA,
-    'resC' => $resC
-]); */

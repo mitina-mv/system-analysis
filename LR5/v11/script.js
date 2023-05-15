@@ -4,9 +4,10 @@ const app = Vue.createApp({
             countVertex: 0,
             arrData: [],
             matrixA: [],
-            stepenA: [],
-            resA: [],
-            resC: [],
+            stepeniVartex: [],
+            r: null,
+            eps: null,
+            messR: null,
             flag: false, 
             errorText: null
         }
@@ -71,9 +72,10 @@ const app = Vue.createApp({
                     .post('./getResult.php', tmpData)
                     .then(response => {
                         this.matrixA = response.data.matrixA
-                        this.stepenA = response.data.stepenA
-                        this.resA = response.data.resA
-                        this.resC = response.data.resC
+                        this.stepeniVartex = response.data.stepeniVartex
+                        this.r = response.data.r
+                        this.eps = response.data.eps
+                        this.messR = response.data.messR
                     })
                     .catch(error => {
                         this.errorText = `Не удалось обработать запрос`;

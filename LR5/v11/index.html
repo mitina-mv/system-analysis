@@ -41,10 +41,36 @@
         <div>
             <div class="result-panel">
                 <h3>Результаты вычислений</h3>
+
+                <div class="result-adjacency-matrix" v-if='flag'>
+                    <h4>Параметры</h4>
+                    
+                    <div><b>R = </b>{{ r }}</div>
+                    <div><b>eps^2 = </b>{{ eps }}</div>
+                    <div><b>Сообщение по R: </b>{{ messR }}</div>
+                </div>
+
+                <div class="result-adjacency-matrix" v-if='flag'>
+                    <h4>Степени вершин для расчета eps^2</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th v-for="(item, index) in arrData">{{index + 1}}</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody>
+                            <tr>
+                                <td v-for="(cell, index) in stepeniVartex">
+                                    {{cell}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
     
                 <div class="result-adjacency-matrix" v-if='flag'>
                     <h4>Матрица А смежности</h4>
-
                     <table>
                         <thead>
                             <tr>
@@ -55,70 +81,6 @@
     
                         <tbody>
                             <tr v-for="(row, index) in matrixA">
-                                <th>{{index + 1}}</th>
-                                <td v-for="(item, ind) in row">{{item}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="result-adjacency-matrix" v-if='flag'>
-                    <h4>Матрица А k смежности</h4>
-
-                    <div v-for="(arr, index) in stepenA">
-                        <h5>k = {{index}}</h5>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th v-for="(item, index) in arrData">{{index + 1}}</th>
-                                </tr>
-                            </thead>
-        
-                            <tbody>
-                                <tr v-for="(row, index) in arr">
-                                    <th>{{index + 1}}</th>
-                                    <td v-for="(item, ind) in row">{{item}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <br>
-                    </div>
-                </div>
-    
-                <div class="result-adjacency-matrix" v-if='flag'>
-                    <h4>Матрица А результирующая</h4>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th v-for="(item, index) in arrData">{{index + 1}}</th>
-                            </tr>
-                        </thead>
-    
-                        <tbody>
-                            <tr v-for="(row, index) in resA">
-                                <th>{{index + 1}}</th>
-                                <td v-for="(item, ind) in row">{{item}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-    
-                <div class="result-adjacency-matrix" v-if='flag'>
-                    <h4>Матрица С</h4>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th v-for="(item, index) in arrData">{{index + 1}}</th>
-                            </tr>
-                        </thead>
-    
-                        <tbody>
-                            <tr v-for="(row, index) in resC">
                                 <th>{{index + 1}}</th>
                                 <td v-for="(item, ind) in row">{{item}}</td>
                             </tr>

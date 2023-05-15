@@ -1,14 +1,139 @@
 body {
     margin: 0;
     padding: 0;
-    background: #eaf0f4;
+    /* background: #eaf0f4; */
+    display: grid;
+    gap: 10px;
+}
+
+
+div#app {
+    width: 1000px;
+    /* margin: 20px auto; */
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.form-field {
+    display: grid;
+    gap: 3px;
+}
+.input-items .form-field {
+    display: grid;
+    grid-template-columns: 1fr 9fr;
+    align-items: center;
+}
+
+input[type="number"], input[type="text"] {
+    padding: 5px 10px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+
+.control-panel h3 {
+    grid-column: span 2;
+    margin: 0;
+}
+
+.table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 65px);
+}
+
+.table-col {
+    display: grid;
+}
+
+.th, .td {
+    border: 1px solid;
+    padding: 5px;
+    min-height: 35px;
+}
+.table-col > .th {
+    text-align: center;
+    font-weight: bold;
+}
+.table input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+.table input[type="number"]::-webkit-outer-spin-button,
+.table input[type="number"]::-webkit-inner-spin-button {
+	display: none;
+}
+table {
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid;
+    padding: 5px;
+    min-height: 20px;
+    min-width: 50px;
+}
+
+.input-items {
+    display: grid;
+    gap: 5px 16px;
+}
+
+p.teh-info {
+    background: #f1f1f1;
+    border-color: #ccc;
+}
+
+p {
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+button {
+    padding: 8px 12px;
+    text-transform: uppercase;
+    background: #318600;
+    color: #fff;
+    font-weight: 800;
+    /* font-family: 'Consolas'; */
+    font-size: 17px;
+    border: none;
+    border-radius: 5px;
+    width: fit-content;
+    margin: 15px 0 20px;
+    cursor: pointer;
+}
+button.second-btn {
+    margin-left: 10px;
+    background: #fff;
+    color: #f00;
+    border: 1px solid #f00;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+.item{
+    background-color: rgba(170, 170, 170, 0.194);
+    padding: 6px;
+    border: 1px solid #aaa;
+}
+.item:nth-child(2n) {
+    background-color: rgba(154, 255, 184, 0.24);
+}
+/*-------------------------
+ body {
+    margin: 0;
+    padding: 0;
     display: grid;
     gap: 10px;
 }
 
 div#app {
-    width: 800px;
-    margin: 20px auto;
+    width: 1000px;
     background: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -16,6 +141,11 @@ div#app {
 .form-field {
     display: grid;
     gap: 3px;
+}
+.input-items .form-field {
+    display: grid;
+    grid-template-columns: 1fr 9fr;
+    align-items: center;
 }
 
 input[type="number"], input[type="text"] {
@@ -55,8 +185,9 @@ td, th {
 
 .input-items {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    /* grid-template-columns: repeat(2, 1fr); 
     gap: 5px 16px;
+    width: 50%;
 }
 
 p.teh-info {
@@ -68,7 +199,7 @@ p {
     padding: 10px;
     border: 1px solid;
     border-radius: 7px;
-    font-family: 'Consolas';
+    /* font-family: 'Consolas'; 
     font-size: 15px;
 }
 
@@ -80,47 +211,26 @@ p.info {
 button {
     padding: 8px 12px;
     text-transform: uppercase;
-    background: #4e29e9;
+    background: #318600;
     color: #fff;
     font-weight: 800;
-    font-family: 'Consolas';
-    font-size: 20px;
+    /* font-family: 'Consolas'; 
+    font-size: 17px;
     border: none;
     border-radius: 5px;
-    width: 100%;
+    width: fit-content;
     margin: 15px 0 20px;
+    cursor: pointer;
 }
-
-.tabs {
-    display: flex;
-    gap: 8px;
-    border-bottom: 1px solid #ccc;
-}
-
-span.tab {
-    padding: 8px;
-    background: #f1f1f1;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-span.tab.active-tab {
-    background: #e7e7ff;
-    border-color: #95b3ff;
-    color: #001c68;
-}
-.tab-content {
-    display: none;
-}
-
-.tab-content.active-tab {
-    display: block;
+button.second-btn {
+    margin-left: 10px;
+    background: #fff;
+    color: #f00;
+    border: 1px solid #f00;
 }
 .item {
     padding: 4px 4px 6px;
     font-size: 20px;
     display: flex;
     gap: 10px;
-    border-bottom: 1px solid #aaa;
-}
+} */
