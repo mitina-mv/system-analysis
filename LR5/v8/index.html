@@ -16,11 +16,15 @@
                     <label for="countVertex">Количество вершин</label>
                     <input type="number" name="countVertex" id="" v-model="countVertex" min=0 @change="addDataInput">
                 </div>
+
+                <div class="form-field">
+                    <label for="countVertex">Количество дуг</label>
+                    <input type="number" name="countVertex" id="" v-model="countM" min=0 @change="addDataInput">
+                </div>
             </div>
     
             <div class="data-panel">
-                <h3>Множество правых инцеденций G<sup>+1</sup>(i)</h3>
-                <p class="info">Множество G<sup>+1</sup>(i) правых инциденций определяет все вершины, в которые можно попасть из вершины i. Введите вершины через ", " (запятая и пробел).</p>
+                <h3>Матрица В</h3>
     
                 <div class="input-items">
                     <div class="form-field" v-for="(item, index) in arrData">
