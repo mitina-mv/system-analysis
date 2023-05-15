@@ -15,24 +15,6 @@ div#app {
     border-radius: 10px;
 }
 
-/* .form-field {
-    display: grid;
-    gap: 3px;
-}
-
-input[type="number"], input[type="text"] {
-    padding: 7px 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.control-panel {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px 40px;
-    margin-bottom: 20px;
-} */
 .form-field {
     display: grid;
     gap: 3px;
@@ -93,7 +75,6 @@ td, th {
 
 .input-items {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 5px 16px;
 }
 
