@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>LR4</title>
+</head>
+<body>
+    <div id="app">
+        <h1>ЛР4. Вариант 11</h1>
+        <h3><u>Задание:</u> Вводим матрицу расстояний D. Получаем матрицу кратчайших путей алгоритмом Данцига.</h3>
+
+        <div class="control-panel">
+            <div style="grid-column: 1/-1;">
+                <h3>Ввод количества вершин</h3>
+            </div>
+
+            <div class="form-field">
+                <label for="countVertex">Количество вершин</label>
+                <input type="number" name="countVertex" id="" v-model="countVertex" min=0 @change="addDataInput">
+            </div>
+        </div>
+
+        <div class="inner-matrix">
+            <h3>Ввод матрицы расстояний D</h3>
+
+            <div class="table">
+                <div class="table-col">
+                    <div class="th"></div>
+                    <div class="th" v-for="(item, index) in arrData">{{index + 1}}</div>
+                </div>
+        
+                <div class="table-col" v-for="(arr, index) in arrData">
+                    <div class="th">{{ index + 1 }}</div>
+                    <div class="td" v-for="(item, ind) in arr">
+                        <input type="number" :name="'vertex[' + ind + ']'" id="" v-model="arrData[ind][index]"  min=0>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button class="primary-btn" @click='getResult()' @keyup.enter="getResult()">Результат</button>
+                <button class="second-btn" @click='remove()'>Очистить</button>
+            </div>
+        </div>
+
+        <div class="result" v-if="flag">
+            <h3>Результаты вычислений</h3>
+
+            <div class="">
+                <h4>Матрица кратчайших путей</h4>
+
+                <table>
+                    <thead>
+                        <th></th>
+                        <th v-for="(item, index) in matrixPath">{{index + 1}}</th>
+                    </thead>
+
+                    <tbody>
+                        <tr v-for="(arr, index) in matrixPath">
+                            <th>{{index + 1}}</th>
+                            <td v-for="(item, ind) in arr">
+                                {{item}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/plagins/vue3.0/vue.js"></script>
+    <script src="/plagins/axios/axios.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
