@@ -2,7 +2,7 @@
 $json_str = file_get_contents('php://input'); 
 $arr = json_decode($json_str, true);
 
-echo "<pre>";
+// echo "<pre>";
 // умножение матриц
 function multiply(&$mat1, &$mat2, &$res)
 {
@@ -75,7 +75,7 @@ while($curSum !== 0)
     $curSum = array_multisum($arStepenMatrix[$k]);
     ++$k;
 
-    if($k > 100)
+    if($k > 7)
     {
         break;
     }
@@ -99,6 +99,7 @@ foreach($resA as $v1 => $row)
 }
 
 echo json_encode([
+    'matrixA' => $matrixA,
     'stepenA' => $arStepenMatrix,
     'resA' => $resA,
     'resC' => $resC

@@ -53,7 +53,7 @@
 
                     <div class="result-body">
                         <span class="item" v-for="(arr, index) in matrix">
-                            G<sup>-1</sup>({{ Number(index) + 1 }}) = {{ getString(arr) }}
+                            G<sup>-1</sup>({{ Number(index) + 1 }}) = {{ getString(Object.values(arr)) }}
                         </span>
                     </div>
                 </div>

@@ -62,7 +62,7 @@ const app = Vue.createApp({
             if(this.flag)
             {                
                 axios
-                    .post('/LR2/getResult.php', tmpData)
+                    .post('./getResult.php', tmpData)
                     .then(response => {
                         this.newMatrix = response.data.newMatrix;
                         this.levels = response.data.levels;

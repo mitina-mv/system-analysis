@@ -41,38 +41,87 @@
                 <h3>Результаты вычислений</h3>
     
                 <div class="result-adjacency-matrix" v-if='flag'>
-                    <h4>Компоненты связности</h4>
+                    <h4>Матрица А смежности</h4>
 
-                    <div class="graphs-items">
-                        <div class="item" v-for="(item, index) in graphs">
-                            <b>G{{index + 1}}</b>
-                            <span class="vertex">( {{getString(item.vertex)}} )</span>
-                            <span class="edges">Дуги ( {{getString(item.edges, 0)}} )</span>
-                        </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th v-for="(item, index) in arrData">{{index + 1}}</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody>
+                            <tr v-for="(row, index) in matrixA">
+                                <th>{{index + 1}}</th>
+                                <td v-for="(item, ind) in row">{{item}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="result-adjacency-matrix" v-if='flag'>
+                    <h4>Матрица А k смежности</h4>
+
+                    <div v-for="(arr, index) in stepenA">
+                        <h5>k = {{index}}</h5>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th v-for="(item, index) in arrData">{{index + 1}}</th>
+                                </tr>
+                            </thead>
+        
+                            <tbody>
+                                <tr v-for="(row, index) in arr">
+                                    <th>{{index + 1}}</th>
+                                    <td v-for="(item, ind) in row">{{item}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
                     </div>
                 </div>
     
-                <div class="result-incidence-matrix" v-if='flag'>
-                    <h4>Матрица инциденций В графа из компонент связности</h4>
+                <div class="result-adjacency-matrix" v-if='flag'>
+                    <h4>Матрица А результирующая</h4>
 
-                    <div class="table">
-                        <div class="table-col">
-                            <div> </div>
-                            <div class="th" v-for="(item, index) in graphs">G{{index + 1}}</div>
-                        </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th v-for="(item, index) in arrData">{{index + 1}}</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody>
+                            <tr v-for="(row, index) in resA">
+                                <th>{{index + 1}}</th>
+                                <td v-for="(item, ind) in row">{{item}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+    
+                <div class="result-adjacency-matrix" v-if='flag'>
+                    <h4>Матрица С</h4>
 
-                        <div class="table-col" v-for="(arr, edge) in matrix">
-                            <div class="th">{{ arr.name }}</div>
-                            <div v-for="(item, index) in arr.row">{{ item }}</div>
-                        </div>
-                    </div>
-
-                    <div class="table-edges">
-                        <b>Справочник по <br/>названию ребер</b>
-                        <span class="egde" v-for="(item, name) in edges">
-                            {{name}}: {{item}}
-                        </span>
-                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th v-for="(item, index) in arrData">{{index + 1}}</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody>
+                            <tr v-for="(row, index) in resC">
+                                <th>{{index + 1}}</th>
+                                <td v-for="(item, ind) in row">{{item}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <p class="result-panel__no-data teh-info" v-if='!flag' :class="errorText == null ? '' : 'error'">

@@ -67,7 +67,7 @@ while(count($noUsedVertex) > 0)
             $levels[count($levels) - 1][$nv] = $nameVertex;
 
             unset($noUsedVertex[$key]);
-            --$i;
+            --$k;
             ++$nameVertex;
         }
     }

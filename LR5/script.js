@@ -3,9 +3,10 @@ const app = Vue.createApp({
         return {
             countVertex: 0,
             arrData: [],
-            matrix: [],
-            edges: [],
-            graphs: [],
+            matrixA: [],
+            stepenA: [],
+            resA: [],
+            resC: [],
             flag: false, 
             errorText: null
         }
@@ -69,9 +70,10 @@ const app = Vue.createApp({
                 axios
                     .post('./getResult.php', tmpData)
                     .then(response => {
-                        this.matrix = response.data.matrix
-                        this.edges = response.data.edges
-                        this.graphs = response.data.graphs
+                        this.matrixA = response.data.matrixA
+                        this.stepenA = response.data.stepenA
+                        this.resA = response.data.resA
+                        this.resC = response.data.resC
                     })
                     .catch(error => {
                         this.errorText = `Не удалось обработать запрос`;

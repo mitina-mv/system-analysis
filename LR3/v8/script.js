@@ -63,7 +63,7 @@ const app = Vue.createApp({
             if(this.flag)
             {                
                 axios
-                    .post('./getResult.php', tmpData)
+                    .post('/LR2/v10/getResult.php', tmpData)
                     .then(response => {
                         this.matrix = response.data.matrix
                         this.edges = response.data.edges

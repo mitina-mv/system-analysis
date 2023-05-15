@@ -188,7 +188,7 @@ foreach($edges as $key => $num)
 
 foreach($matrix as &$arr)
 {
-    $arr = array_unique($arr);
+    $arr = array_values(array_unique($arr));
 }
 
 echo json_encode([
