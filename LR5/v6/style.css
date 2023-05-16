@@ -1,7 +1,11 @@
 body {
-    font-family: "Arial";
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    background: #fff;
+    display: grid;
+    gap: 10px;
+    font-family: 'Consolas';
+    font-size: 18px;
 }
 
 div#app {
@@ -90,37 +94,31 @@ p {
     padding: 10px;
     border: 1px solid;
     border-radius: 7px;
+    font-family: 'Consolas';
     font-size: 15px;
 }
 
 button {
-    background: none;
+    padding: 8px 12px;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-family: 'Consolas';
+    font-size: 20px;
     border: none;
-    padding: 10px 24px;
-    font-family: "Arial";
-    font-size: 16px;
-    font-weight: 600;
-    border-radius: 20px;
+    border-radius: 5px;
+    width: 100%;
+    margin: 15px 0 20px;
 }
 .primary-btn{
-    background: #a9f7ae;
-    color: #085f00;
+    background: #474747;
+    color: #fff;
 }
-button.second-btn {
-    background: #ffdada;
-    color: #9d0000;
+.second-btn{
+    border: 1px solid #474747;
+    color: #474747;
 }
 
 .buttons {
     display: flex;
     gap: 10px;
-    margin: 10px 0;
-}
-.item{
-    background-color: rgba(170, 170, 170, 0.194);
-    padding: 6px;
-    border: 1px solid #aaa;
-}
-.item:nth-child(2n) {
-    background-color: rgba(154, 255, 184, 0.24);
 }

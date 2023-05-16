@@ -3,13 +3,14 @@ const app = Vue.createApp({
         return {
             countVertex: 0,
             countM: 0,
-            namesEdges: [],
+            namesVertex: [],
             arrData: [],
             matrixA: [],
-            stepeniVartex: [],
-            r: null,
-            eps: null,
-            messR: null,
+            matrixD: [],
+            zi: [],
+            b: null,
+            zmax: null,
+            q: null,
             flag: false, 
             errorText: null
         }
@@ -28,11 +29,11 @@ const app = Vue.createApp({
                 for(let j = 0; j < this.countVertex; ++j)
                 {
                     this.arrData[i][j] = 0;
-                    this.namesEdges.push(j + 1);
+                    this.namesVertex.push(j + 1);
                 }
             }
 
-            this.flag = true;
+            this.flag = false;
         },
 
         getResult: function()
@@ -69,10 +70,11 @@ const app = Vue.createApp({
                         if(!response.data.status)
                         {
                             this.matrixA = response.data.matrixA
-                            this.stepeniVartex = response.data.stepeniVartex
-                            this.r = response.data.r
-                            this.eps = response.data.eps
-                            this.messR = response.data.messR
+                            this.matrixD = response.data.matrixD
+                            this.zi = response.data.zi
+                            this.b = response.data.b
+                            this.zmax = response.data.zmax
+                            this.q = response.data.q
                         } else {
                             this.errorText = response.data.message;
                             console.log(this.errorText);
@@ -82,6 +84,7 @@ const app = Vue.createApp({
                     .catch(error => {
                         this.errorText = `Не удалось обработать запрос`;
                         console.log(error)
+                        this.flag = false;
                     });
             }
         },

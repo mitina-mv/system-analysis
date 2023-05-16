@@ -47,7 +47,7 @@ $r = ( 1 / (2 * ($n - 1)) ) * $sumA - 1;
 
 $gsred = (2 * $m) / $n;
 $g = []; // степени вершин
-
+$m = array_multisum($matrixANeor) / 2; // количество ребер
 foreach($matrixNeor as $v => $row)
 {
     $g[$v] = array_sum($row);
