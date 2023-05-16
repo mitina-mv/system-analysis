@@ -17,7 +17,7 @@ function array_multisum($arr)
 }
 
 $n = count($arr[0]); // кол-во вершин
-$m = count($arr); // кол-во дуг
+$m = count($arr) / 2; // кол-во дуг
 
 $matrixA = array_fill(0, $n, array_fill(0, $n, 0));
 $matrixNeor = $matrixA;
