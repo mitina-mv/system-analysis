@@ -2,6 +2,8 @@ const app = Vue.createApp({
     data(){
         return {
             countVertex: 0,
+            countM: 0,
+            namesEdges: [],
             arrData: [],
             matrixA: [],
             stepeniVartex: [],
@@ -16,43 +18,40 @@ const app = Vue.createApp({
     methods: {
         addDataInput: function() 
         {
-            if(this.countVertex < this.arrData.length){
-                this.arrData = this.arrData.slice(0, this.countVertex);
-            }
-
-            for(let i = 0; i < this.countVertex; ++i)
+            if(this.countVertex == 0 || this.countM == 0) return;
+            
+            this.arrData = [];
+            
+            for(let i = 0; i < this.countM; ++i)
             {
-                if(typeof this.arrData[i] == 'undefined'){
-                    this.arrData.push('');
+                this.arrData.push([]);
+                for(let j = 0; j < this.countVertex; ++j)
+                {
+                    this.arrData[i][j] = 0;
+                    this.namesEdges.push(j + 1);
                 }
             }
-            this.flag = false;
+
+            this.flag = true;
         },
 
         getResult: function()
         {
-            let tmpData = {};
             let flagIncorrectData = true;
-
             // получение входных данных
             for(let i = 0; i < this.arrData.length; ++i)
             {                
-                tmpData[i] = this.arrData[i].split(', ');
-
-                if(this.arrData[i] == '')
+                for(let j = 0; j < this.countVertex; ++j)
                 {
-                    tmpData[i] = [];
-                    continue;
-                } 
-
-                flagIncorrectData = tmpData[i].every(j => {
-                    if(isNaN(j) || (Number(j) <= 0 || Number(j) > this.countVertex))
-                    {
-                        this.errorText = `В поле G(${i+1}) введено некорректное значение!`;
-                        return false;
-                    } 
-                    else return true;
-                });
+                    if(this.arrData[i][j] != -1
+                    && this.arrData[i][j] != 1
+                    && this.arrData[i][j] != 0
+                    ) {
+                        flagIncorrectData = false;
+                        break;
+                    }
+                    
+                }
 
                 if(!flagIncorrectData) {
                     this.flag = false;
@@ -65,13 +64,20 @@ const app = Vue.createApp({
             if(this.flag)
             {                
                 axios
-                    .post('./getResult.php', tmpData)
+                    .post('./getResult.php', this.arrData)
                     .then(response => {
-                        this.matrixA = response.data.matrixA
-                        this.stepeniVartex = response.data.stepeniVartex
-                        this.r = response.data.r
-                        this.eps = response.data.eps
-                        this.messR = response.data.messR
+                        if(!response.data.status)
+                        {
+                            this.matrixA = response.data.matrixA
+                            this.stepeniVartex = response.data.stepeniVartex
+                            this.r = response.data.r
+                            this.eps = response.data.eps
+                            this.messR = response.data.messR
+                        } else {
+                            this.errorText = response.data.message;
+                            console.log(this.errorText);
+                            this.flag = false;
+                        }
                     })
                     .catch(error => {
                         this.errorText = `Не удалось обработать запрос`;

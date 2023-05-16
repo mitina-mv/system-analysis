@@ -2,8 +2,6 @@
 $json_str = file_get_contents('php://input'); 
 $arr = json_decode($json_str, true);
 
-// echo "<pre>";
-
 // сумма матрицы
 function array_multisum($arr)
 {
@@ -18,39 +16,39 @@ function array_multisum($arr)
     return $sum; 
 }
 
-// создаем матрицу А - смежности
-$matrixA = [];
-foreach($arr as $vertex => $arrVertex)
-{
-    $matrixA[$vertex] = array_fill(0, count($arr), 0);
+$n = count($arr[0]); // кол-во вершин
+$m = count($arr) / 2; // кол-во дуг
 
-    foreach($arrVertex as $v)
+$matrixA = array_fill(0, $n, array_fill(0, $n, 0));
+$matrixNeor = $matrixA;
+
+foreach($arr as $e => $row)
+{
+    $start = array_search(1, $row);
+    $finish = array_search(-1, $row);
+    
+    if($start !== false && $finish !== false)
     {
-        $matrixA[$vertex][$v - 1] = 1;
+        $matrixA[$start][$finish] = 1;
+
+        $matrixNeor[$start][$finish] = 1;
+        $matrixNeor[$finish][$start] = 1;
+    } else {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Невалидные данные, проверьте ввод'
+        ]);
+        return;
     }
 }
 
 $sumA = array_multisum($matrixA);
-$n = count($arr); // количество верршин
 $r = ( 1 / (2 * ($n - 1)) ) * $sumA - 1;
-// print_r($r);
 
-// составление матрицы неор графа
-$matrixANeor = array_fill(0, count($arr), array_fill(0, count($arr), 0));
-foreach($arr as $vertex => $arrVertex)
-{
-    foreach($arrVertex as $v)
-    {
-        $matrixANeor[$vertex][$v - 1] = 1;
-        $matrixANeor[$v - 1][$vertex] = 1;
-    }
-}
-
-$m = array_multisum($matrixANeor) / 2; // количество ребер
 $gsred = (2 * $m) / $n;
 $g = []; // степени вершин
 
-foreach($matrixANeor as $v => $row)
+foreach($matrixNeor as $v => $row)
 {
     $g[$v] = array_sum($row);
 }

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>LR5</title>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <div class="control-panel">
+                <h3>Ввод количества вершин</h3>
+                <div class="form-field">
+                    <label for="countVertex">Количество вершин</label>
+                    <input type="number" name="countVertex" id="" v-model="countVertex" min=0 @change="addDataInput">
+                </div>
+
+                <div class="form-field">
+                    <label for="countVertex">Количество дуг</label>
+                    <input type="number" name="countVertex" id="" v-model="countM" min=0 @change="addDataInput">
+                </div>
+            </div>
+    
+            <div class="data-panel">
+                <h3>Матрица В</h3>
+
+                <div class="table">
+                    <div class="table-col">
+                        <div class="th"></div>
+                        <div class="th" v-for="item in Number(countVertex)">{{ item }}</div>
+                    </div>
+            
+                    <div class="table-col" v-for="index in Number(countM)">
+                        <div class="th">e{{ index }}</div>
+                        <div class="td" v-for="(item, ind) in arrData[index - 1]">
+                            <input type="number" :name="'vertex[' + ind + ']'" id="" v-model="arrData[index - 1][ind]"  min=0>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="buttons">
+                    <button class="primary-btn" @click='getResult()' @keyup.enter="getResult()">Результат</button>
+                    <button class="second-btn" @click='remove()'>Очистить</button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="result-panel">
+                <h3>Результаты вычислений</h3>
+    
+                <div class="result-adjacency-matrix" v-if='flag'>
+                    <h4>Параметры</h4>
+                    
+                    <div><b>R = </b>{{ r }}</div>
+                    <div><b>eps^2 = </b>{{ eps }}</div>
+                    <div><b>Сообщение по R: </b>{{ messR }}</div>
+                </div>
+
+                <div class="result-adjacency-matrix" v-if='flag'>
+                    <h4>Степени вершин для расчета eps^2</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th v-for="item in Number(countVertex)">{{ item }}</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody>
+                            <tr>
+                                <td v-for="(cell, index) in stepeniVartex">
+                                    {{cell}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+    
+                <div class="result-adjacency-matrix" v-if='flag'>
+                    <h4>Матрица А смежности</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th v-for="item in Number(countVertex)">{{ item }}</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody>
+                            <tr v-for="(row, index) in matrixA">
+                                <th>{{index + 1}}</th>
+                                <td v-for="(item, ind) in row">{{item}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <p class="result-panel__no-data teh-info" v-if='!flag' :class="errorText == null ? '' : 'error'">
+                {{ errorText == null ? 'Для получения результата введите корректные данные и нажмите кнопку "Результат".' : errorText }}                
+            </p>
+        </div>
+    </div>
+    
+    <script src="/plagins/vue3.0/vue.js"></script>
+    <script src="/plagins/axios/axios.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
