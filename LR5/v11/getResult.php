@@ -18,20 +18,6 @@ function array_multisum($arr)
     return $sum; 
 }
 
-function svyzGraph($g, $n)
-{
-    $flag = true;
-    $check = ($n - 1) / 2;
-
-    foreach($g as $cell)
-    {
-        if($cell < $check)
-            $flag = false;
-    }
-
-    return $flag;
-}
-
 // создаем матрицу А - смежности
 $matrixA = [];
 foreach($arr as $vertex => $arrVertex)

@@ -34,10 +34,6 @@ const app = Vue.createApp({
             let tmpData = {};
             let flagIncorrectData = true;
 
-            this.lastMatrix = [];
-            this.newMatrix = [];
-            this.levels = [];
-
             // получение входных данных
             for(let i = 0; i < this.arrData.length; ++i)
             {                
