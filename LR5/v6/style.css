@@ -1,0 +1,124 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    display: grid;
+    gap: 10px;
+    font-family: 'Consolas';
+    font-size: 18px;
+}
+
+div#app {
+    max-width: 1400px;
+    margin: 20px auto;
+    width: 90%;
+    padding: 20px;
+    border-radius: 10px;
+    gap: 20px;
+    min-height: calc(100vh - 40px);
+    box-sizing: border-box;
+}
+.form-field {
+    display: grid;
+    gap: 3px;
+}
+
+input[type="number"], input[type="text"] {
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.control-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 40px;
+    margin-bottom: 20px;
+}
+
+.control-panel h3 {
+    grid-column: span 2;
+    margin: 0;
+}
+
+.table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 65px);
+}
+
+.table-col {
+    display: grid;
+}
+
+.th, .td {
+    border: 1px solid;
+    padding: 5px;
+    min-height: 35px;
+}
+.table-col > .th {
+    text-align: center;
+    font-weight: bold;
+}
+.table input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+.table input[type="number"]::-webkit-outer-spin-button,
+.table input[type="number"]::-webkit-inner-spin-button {
+	display: none;
+}
+table {
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid;
+    padding: 5px;
+    min-height: 20px;
+    min-width: 50px;
+}
+
+.input-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px 16px;
+}
+
+p.teh-info {
+    background: #f1f1f1;
+    border-color: #ccc;
+}
+
+p {
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 7px;
+    font-family: 'Consolas';
+    font-size: 15px;
+}
+
+button {
+    padding: 8px 12px;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-family: 'Consolas';
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    margin: 15px 0 20px;
+}
+.primary-btn{
+    background: #474747;
+    color: #fff;
+}
+.second-btn{
+    border: 1px solid #474747;
+    color: #474747;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
