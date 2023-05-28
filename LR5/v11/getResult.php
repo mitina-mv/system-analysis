@@ -56,15 +56,15 @@ foreach($matrixANeor as $v => $row)
 }
 
 $eps = NULL;
-if($r >= 0)
-{
+// if($r >= 0)
+// {
     // расчет eps
     $eps = 0;
     foreach($g as $cell)
     {
         $eps += ($cell - $gsred) ** 2;
     }
-}
+// }
 
 $messR = '';
 switch(true)
