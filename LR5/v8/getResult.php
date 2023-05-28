@@ -47,22 +47,26 @@ $r = ( 1 / (2 * ($n - 1)) ) * $sumA - 1;
 
 $gsred = (2 * $m) / $n;
 $g = []; // степени вершин
+$grmp = []; // степени вершин
 $m = array_multisum($matrixANeor) / 2; // количество ребер
 foreach($matrixNeor as $v => $row)
 {
     $g[$v] = array_sum($row);
+
+    if($g[$v] != INF)
+        $grmp[$v] = $g[$v];
 }
 
 $eps = NULL;
-if($r >= 0)
-{
+// if($r >= 0)
+// {
     // расчет eps
     $eps = 0;
-    foreach($g as $cell)
+    foreach($grmp as $cell)
     {
         $eps += ($cell - $gsred) ** 2;
     }
-}
+// }
 
 $messR = '';
 switch(true)
@@ -82,6 +86,6 @@ echo json_encode([
     'r' => $r,
     'eps' => $eps === NULL ? "-" : round($eps, 3),
     'matrixA' => $matrixA,
-    'stepeniVartex' => $g,
+    'stepeniVartex' => $g === INF ? '∞' : $g,
     'messR' => $messR
 ]);
